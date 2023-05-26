@@ -7,7 +7,7 @@
 var DEBUG_MODE = true;
 
 // this can be used to set the number of sliders to show
-var NUM_SLIDERS = 7;
+var NUM_SLIDERS = 8;
 
 // other variables can be in here too
 // here's some examples for colors used
@@ -35,6 +35,12 @@ function Face(facedetail_value,righteye_value, lefteye_value, mouthh_value) {
   this.righteye_value = 3;
   this.lefteye_value = 6;
   this.mouthh_value = 5;
+  this.Haircolour_value;
+  this.chizzeled_value;
+  this.nose_value;
+
+  this.orange = color('#E98F36');
+  this.tourq = color('#36E9D3');
 
 
   // these are state variables for a face
@@ -72,7 +78,89 @@ function Face(facedetail_value,righteye_value, lefteye_value, mouthh_value) {
 
     this.L_eyeX = positions.left_eye[0][0];
     this.L_eyeY = positions.left_eye[0][1];
+
+    this.headWidth = positions.chin[16][0] - positions.chin[0][0]; // Use 1st and last points of chin to get width
+    this.headHeight = positions.chin[8][1] - positions.nose_bridge[0][1]; // Top nose bridge point to bottom chin point
     
+    this.headSize_L = positions.nose_tip[2][0] - positions.chin[2][0]; // Size of left side head
+    this.headSize_R = positions.chin[14][0] - positions.nose_tip[2][0]; // Size of right side head
+
+    this.left_faceedgeX = positions.chin[14][0]+1;
+    this.left_faceedgeY = positions.chin[14][0]-2;
+
+    this.right_faceedgeX = positions.chin[6][0]-2;
+    this.right_faceedgeY = positions.chin[6][0]+1;
+
+
+
+    this.ear_trans;
+
+    this.ear_points = 8;
+
+    //finding the short side of the face to define where the circle will appea
+    // on each side
+
+    ////// RIGHT EAR /////////////////
+    // makes ear line stroke appear when head facing left and center on
+    if(this.headSize_L <= this.headSize_R){
+      this.ear_trans  = 255;
+     }
+     // makes ear line dissapear when head is facing right
+     else if (this.headSize_L > this.headSize_R){
+      this.ear_trans  = 0;
+     }
+  
+    push();
+    // noStroke();
+    // fill(255, 255, 255,this.ear_trans);
+    // ellipse (this.left_faceedgeX, this.left_faceedgeY, 0.2, 0.2)
+
+    beginShape();
+    strokeWeight(0.05);
+    stroke(255, 255, 255, this.ear_trans);
+    noFill();
+  vertex(this.left_faceedgeX, this.left_faceedgeY);
+  bezierVertex(this.left_faceedgeX - 0.2, this.left_faceedgeY+0.3, this.left_faceedgeX +0.1, this.left_faceedgeY+0.4, this.left_faceedgeX-0.2, this.left_faceedgeY+0.6);
+  endShape();
+
+    pop();
+
+     ///////// LEFT EAR ///////////
+     if(this.headSize_L >= this.headSize_R){
+      this.ear_trans2  = 255;
+     }
+     // makes ear line dissapear when head is facing right
+     else if (this.headSize_R > this.headSize_L){
+      this.ear_trans2  = 0;
+     }
+  
+    push();
+     //noStroke();
+     fill(255, 255, 255,255);
+     ellipse (this.right_faceedgeX, this.right_faceedgeY, 0.2, 0.2)
+
+    beginShape();
+    strokeWeight(0.05);
+    stroke(255, 255, 255,this.ear_trans2);
+    noFill();
+    vertex(this.right_faceedgeX, this.right_faceedgeY);
+    bezierVertex(this.right_faceedgeX - 0.2, this.right_faceedgeY+0.3, this.right_faceedgeX -0.3, this.right_faceedgeY+0.4, this.right_faceedgeX-0.2, this.right_faceedgeY+0.6);
+
+    endShape();
+
+    pop();
+
+
+
+    //////////// HAIR COLOUR////
+    this.hair_colour = this.orange;
+    if (this.Haircolour_value > 50){
+      this.hair_colour = this.orange;
+    }
+
+    else{
+    this.hair_colour= this.tourq;
+    }
 
     scale(0.5);
   
@@ -81,57 +169,59 @@ function Face(facedetail_value,righteye_value, lefteye_value, mouthh_value) {
     angleMode(DEGREES);
   
   
+    
      /////////////////// FACE BASE CIRC ///////////////////////////
-     push();
+    //  push();
   
-     noFill();
-     stroke(255,192,203);
-     strokeWeight(0.3);
+    //  noFill();
+    //  stroke(255,192,203);
+    //  strokeWeight(0.3);
    
 
-     this.points2 = 40;
+    //  this.points2 = 40;
    
-     //*** Pheobes Code for circs */
+    //  //*** Pheobes Code for circs */
   
-     // outer shape
-     beginShape();
+    //  // outer shape
+    //  beginShape();
 
-     ////////////// EXPERIMENTAL //////////
-     //fill(255,255, 255);
-     //ellipse(this.averageRightEye[0]+1.5, this.averageRightEye[1]-3, 1, 1);
-     //ellipse(this.averageLeftEye[0]-2, this.averageLeftEye[1]-3, 1, 1);
+    //  ////////////// EXPERIMENTAL //////////
+    //  //fill(255,255, 255);
+    //  //ellipse(this.averageRightEye[0]+1.5, this.averageRightEye[1]-3, 1, 1);
+    //  //ellipse(this.averageLeftEye[0]-2, this.averageLeftEye[1]-3, 1, 1);
 
-     ///////////////////////////////////////
-     //
-     for (let i = 0; i < this.points2; i++) {
-       let n = map(noise(i), this.lower_val, this.higher_val, -1, this.facedetail_value);
-       let r = 9 + n;
-       x = r * cos(i * (360 / this.points2)); // how warped in e.g goes skinnier
-       y = r * sin(i * (360 / this.points2)); // how flat it is as a 3d 
-       curveVertex(x, y);
-     }
-     endShape(CLOSE);
-     pop();
+    //  ///////////////////////////////////////
+    //  //
+    //  for (let i = 0; i < this.points2; i++) {
+    //    let n = map(noise(i), this.lower_val, this.higher_val, -1, this.facedetail_value);
+    //    let r = 9 + n;
+    //    x = r * cos(i * (360 / this.points2)); // how warped in e.g goes skinnier
+    //    y = r * sin(i * (360 / this.points2)) *1.2 // how flat it is as a 3d 
+    //    curveVertex(x, y);
+    //  }
+    //  endShape(CLOSE);
+    //  pop();
   
   
     //////////////////// FACE DETAIL ////////////////////
     push();
     strokeWeight(0.1);
-    stroke(51);
+
+    stroke(this.hair_colour);
     this.points = 40;
   
        //first shape
        beginShape();
        
        noFill();
-       stroke(255,192,203);
+       stroke(this.hair_colour);
        strokeWeight(0.1)
      
        for (let i = 0; i < this.points; i++) {
          let n = map(noise(i), this.lower_val+1, this.higher_val-2, -1, this.facedetail_value);
          let r = 10 + n;
-         x = r * cos(i * (360 / this.points));
-         y = r * sin(i * (360 / this.points));
+         x = r * cos(i * (360 / this.points)) 
+         y = r * sin(i * (360 / this.points)) *1.2
          curveVertex(x, y);
        }
        endShape(CLOSE);
@@ -147,7 +237,7 @@ function Face(facedetail_value,righteye_value, lefteye_value, mouthh_value) {
        let n = map(noise(i), this.lower_val+1, this.higher_val-2, -1, this.facedetail_value);
        let r = 7 + n;
        x = r * cos(i * (360 / this.points));
-       y = r * sin(i * (360 / this.points));
+       y = r * sin(i * (360 / this.points))*1.2
        curveVertex(x, y);
      }
      endShape(CLOSE);
@@ -162,7 +252,7 @@ function Face(facedetail_value,righteye_value, lefteye_value, mouthh_value) {
       let n = map(noise(i), this.lower_val+1, this.higher_val-2, -1, this.facedetail_value);
       let r = 8 + n;
       x = r * cos(i * (360 / this.points));
-      y = r * sin(i * (360 / this.points));
+      y = r * sin(i * (360 / this.points))*1.2
       curveVertex(x, y);
     }
     endShape(CLOSE);
@@ -177,7 +267,7 @@ function Face(facedetail_value,righteye_value, lefteye_value, mouthh_value) {
          let n = map(noise(i), this.lower_val+1, this.higher_val-2, -1, this.facedetail_value);
          let r = 8.5 + n;
          x = r * cos(i * (360 / this.points));
-         y = r * sin(i * (360 / this.points));
+         y = r * sin(i * (360 / this.points))*1.2
          curveVertex(x, y);
        }
        endShape(CLOSE);
@@ -192,7 +282,7 @@ function Face(facedetail_value,righteye_value, lefteye_value, mouthh_value) {
       let n = map(noise(i), this.lower_val+1, this.higher_val-2, -1, this.facedetail_value);
       let r = 9 + n;
       x = r * cos(i * (360 / this.points));
-      y = r * sin(i * (360 / this.points));
+      y = r * sin(i * (360 / this.points))*1.2
       curveVertex(x, y);
     }
     endShape(CLOSE);
@@ -205,7 +295,7 @@ function Face(facedetail_value,righteye_value, lefteye_value, mouthh_value) {
        let n = map(noise(i), this.lower_val+1, this.higher_val-2, -1, this.facedetail_value);
        let r = 9.5 + n;
        x = r * cos(i * (360 / this.points));
-       y = r * sin(i * (360 / this.points));
+       y = r * sin(i * (360 / this.points))*1.2
        curveVertex(x, y);
      }
      endShape(CLOSE);
@@ -345,7 +435,7 @@ this.facingfrontstroke= 0;
 
     this.DrawinnerNose;
 
-  if (this.MidNoseTip >= this.topofNose){
+  if (this.MidNoseTip < this.topofNose){
     this.DrawinnerNose = this.facingrsidestroke
   }
 
@@ -364,9 +454,9 @@ push();
     beginShape();
     //
     strokeWeight (0.1);
-    for (let i = 0; i <this.points4; i++) {
-      let n = map(noise(i), this.lower_val+0.5, this.higher_val, -2, this.lefteye_value);
-      let r = 3 + n;
+    for (let i = 0; i <this.pointsnose; i++) {
+      let n = map(noise(i), this.lower_val+0.5, this.higher_val, -2, this.nose_value);
+      let r = 2.8 + n;
       this.averageNose[0] = r * cos(i * (360 / this.pointsnose));
       this.averageNose[1] = r * sin(i * (250 / this.pointsnose));
       curveVertex(this.averageNose[0],this.averageNose[1]-1);
@@ -405,6 +495,24 @@ push();
 // if mouth is smiling with teeth then do shocked face squished
 // if half teeth then shoked face
 
+this.mouthsquishfactor;
+
+    this.mouthsquishY = 250;
+    this.Mouthnotsquish = 360;
+
+    this.upperlippoint = positions.top_lip[3];
+    this.lowerLeft_lippoint = positions.top_lip[0];
+
+    if (this.upperlippoint > this.lowerLeft_lippoint){
+      this.mouthsquishfactor =  this.Mouthnotsquish
+    }
+
+    else{
+      this.mouthsquishfactor = this.mouthsquishY
+    }
+
+
+
     push();
     noFill();
     strokeWeight(0.3);
@@ -420,7 +528,7 @@ push();
      let n = map(noise(i), this.lower_val, this.higher_val-1, -2, this.mouthh_value);
      let r = 1.8 + n;
      x = r * cos(i * (360 / this.points5));
-     y = r * sin(i * (360 / this.points5));
+     y = r * sin(i * (this.mouthsquishfactor / this.points5));
      curveVertex(x, y+3);
    }
    endShape(CLOSE);
@@ -554,25 +662,27 @@ push();
   this.setProperties = function(settings) {
     // this.num_eyes = int(map(settings[0], 0, 100, 1, 2));
     // this.eye_shift = map(settings[1], 0, 100, -2, 2);
-    // this.mouth_size = map(settings[2], 0, 100, 0.5, 8);
+     this.nose_value = map(settings[2], 0, 100, 0, 4);
     
     this.facedetail_value = map(settings[3], 0, 100, 0.5, 7);
     this.righteye_value= map(settings[4], 0, 100, 0, 5);
     this.lefteye_value = map(settings[5], 0, 100, 0, 10);
     this.mouthh_value = map(settings[6], 0, 100, 0, 5);
+    this.Haircolour_value = map(settings[7], 0, 100, 0, 100)
   }
 
   /* get internal properties as list of numbers 0-100 */
   this.getProperties = function() {
-    let settings = new Array(3);
+    let settings = new Array(4);
     // settings[0] = map(this.num_eyes, 1, 2, 0, 100);
     // settings[1] = map(this.eye_shift, -2, 2, 0, 100);
-    // settings[2] = map(this.mouth_size, 0.5, 8, 0, 100);
+    settings[2] = map(this.nose_value, 0, 10, 0, 100);
 
     settings[3] = map(this.facedetail_value, 0.5, 7, 0, 100);
     settings[4] = map(this.righteye_value, 0, 5, 0, 100);
     settings[5] = map(this.lefteye_value, 0, 10, 0, 100);
     settings[6] = map(this.mouthh_value, 0, 5, 0, 100);
+    settings[7] = map(this.Haircolour_value, 0, 100, 0, 4);
     return settings;
   }
 }
