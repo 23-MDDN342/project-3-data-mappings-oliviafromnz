@@ -31,6 +31,9 @@ function segment_average(segment) {
 // This where you define your own face object
 function Face(facedetail_value,righteye_value, lefteye_value, mouthh_value) {
 
+  noiseSeed(100); // Set a fixed seed for consistent randomness
+  noiseDetail(8, 0.2); // Set the number of octaves and falloff factor
+
   this.facedetail_value = 2;
   this.righteye_value = 3;
   this.lefteye_value = 6;
@@ -88,14 +91,35 @@ function Face(facedetail_value,righteye_value, lefteye_value, mouthh_value) {
     this.left_faceedgeX = positions.chin[14][0]+1;
     this.left_faceedgeY = positions.chin[14][0]-2;
 
-    this.right_faceedgeX = positions.chin[6][0]-2;
-    this.right_faceedgeY = positions.chin[6][0]+1;
+    this.right_faceedgeX = positions.chin[2][0]-1;
+    this.right_faceedgeY = positions.chin[2][0]+2;
 
-
+    this.frame_movefacing;
+    this.frame_movefacing2;
 
     this.ear_trans;
 
     this.ear_points = 8;
+    this.points = 40;
+    this.dimensionpoints = this.points-2;
+
+    this.warmcolour_orange = color("#E36A25");
+    this.warmcolour_yellow = color("#FEBD11");
+    this.warmcolour_pink = color("#D966A7");
+
+    this.coldcolour_blue = color("#AFDBDF");
+    this.coldcolour_green = color("#9BC070");
+    this.coldcolour_purple = color("#AA489B");
+
+    this.left_maincolour;
+    this.left_featurecolour;
+    this.left_othercolour;
+
+    this.orginal_framecolour;
+
+    this.dimension_maincolour =  this.warmcolour_orange;
+    this.right_featurecolour = this.warmcolour_pink;
+    this.right_othercolour = this.warmcolour_yellow;
 
     //finding the short side of the face to define where the circle will appea
     // on each side
@@ -104,10 +128,13 @@ function Face(facedetail_value,righteye_value, lefteye_value, mouthh_value) {
     // makes ear line stroke appear when head facing left and center on
     if(this.headSize_L <= this.headSize_R){
       this.ear_trans  = 255;
+      this.head_outline = 0;
+
      }
      // makes ear line dissapear when head is facing right
      else if (this.headSize_L > this.headSize_R){
       this.ear_trans  = 0;
+      this.head_outline = 255;
      }
   
     push();
@@ -126,12 +153,27 @@ function Face(facedetail_value,righteye_value, lefteye_value, mouthh_value) {
     pop();
 
      ///////// LEFT EAR ///////////
-     if(this.headSize_L >= this.headSize_R){
+
+     // if u look left its gray and right its white
+     if(this.headSize_L > this.headSize_R){
       this.ear_trans2  = 255;
+      this.head_outline = 255;
+      this.frame_movefacing = +0.3;
+      this.frame_movefacing2 = +1.2;
+      this.dimension_maincolour = this.warmcolour_orange;
+      this.orginal_framecolour = this.warmcolour_pink;
+
+
      }
      // makes ear line dissapear when head is facing right
      else if (this.headSize_R > this.headSize_L){
       this.ear_trans2  = 0;
+      this.head_outline = 100;
+      this.frame_movefacing = -0.3;
+      this.frame_movefacing2 = -1.2;
+      this.dimension_maincolour = this.coldcolour_blue;
+      this.orginal_framecolour = this.coldcolour_green;
+
      }
   
     push();
@@ -141,7 +183,7 @@ function Face(facedetail_value,righteye_value, lefteye_value, mouthh_value) {
 
     beginShape();
     strokeWeight(0.05);
-    stroke(255, 255, 255,this.ear_trans2);
+    stroke(this.dimension_maincolour);
     noFill();
     vertex(this.right_faceedgeX, this.right_faceedgeY);
     bezierVertex(this.right_faceedgeX - 0.2, this.right_faceedgeY+0.3, this.right_faceedgeX -0.3, this.right_faceedgeY+0.4, this.right_faceedgeX-0.2, this.right_faceedgeY+0.6);
@@ -150,7 +192,135 @@ function Face(facedetail_value,righteye_value, lefteye_value, mouthh_value) {
 
     pop();
 
+    ///////////// THIRD DIMENSION HEAD OUTLINE /////////////////
 
+    push();
+    beginShape();
+       
+    noFill();
+    stroke(255,255,255);
+    strokeWeight(0.1)
+
+    scale(0.7);
+
+    for (let i = 0; i < this.dimensionpoints; i++) {
+      let n = map(noise(i), this.lower_val+1, this.higher_val-2, -1, this.facedetail_value-2);
+      let r = 4 + n;
+      x = r * cos(i * (360 / this.dimensionpoints)) 
+      y = r * sin(i * (360 / this.dimensionpoints)) *1.2
+      curveVertex(x+this.frame_movefacing2, y);
+    }
+    endShape(CLOSE);
+    pop();
+
+
+    // // 2nd Thickest head outline
+
+    push();
+    beginShape();
+       
+    noFill();
+    stroke(255,255,255);
+    strokeWeight(0.05)
+
+    scale(0.7);
+
+    for (let i = 0; i < this.dimensionpoints; i++) {
+      let n = map(noise(i), this.lower_val+1, this.higher_val-2, -1, this.facedetail_value-2);
+      let r = 4 + n;
+      x = r * cos(i * (360 / this.dimensionpoints)) 
+      y = r * sin(i * (360 / this.dimensionpoints)) *1.2
+      curveVertex(x+this.frame_movefacing2, y);
+    }
+    endShape(CLOSE);
+    pop();
+
+    // 3rd Thickest head outline
+    push();
+    beginShape();
+       
+    noFill();
+    stroke(255,255,255);
+    strokeWeight(0.01)
+
+    scale(0.66);
+
+    for (let i = 0; i < this.dimensionpoints; i++) {
+      let n = map(noise(i), this.lower_val+1, this.higher_val-2, -1, this.facedetail_value-2);
+      let r = 4 + n;
+      x = r * cos(i * (360 / this.dimensionpoints)) 
+      y = r * sin(i * (360 / this.dimensionpoints)) *1.2
+      curveVertex(x+this.frame_movefacing2, y);
+    }
+    endShape(CLOSE);
+    pop();
+
+    ///////////////////////// SECOND DIMENSION HEAD OUTLINE //////////////////////
+    // Thickest head outline
+
+    push();
+    beginShape();
+       
+    noFill();
+    stroke(this.dimension_maincolour);
+    strokeWeight(0.1)
+
+    scale(0.8);
+
+    for (let i = 0; i < this.dimensionpoints; i++) {
+      let n = map(noise(i), this.lower_val+1, this.higher_val-2, -1, this.facedetail_value-2);
+      let r = 4 + n;
+      x = r * cos(i * (360 / this.dimensionpoints)) 
+      y = r * sin(i * (360 / this.dimensionpoints)) *1.2
+      curveVertex(x+this.frame_movefacing, y);
+    }
+    endShape(CLOSE);
+    pop();
+
+
+    // 2nd Thickest head outline
+
+    push();
+    beginShape();
+       
+    noFill();
+    stroke(this.dimension_maincolour);
+    strokeWeight(0.05)
+
+    scale(0.7);
+
+    for (let i = 0; i < this.dimensionpoints; i++) {
+      let n = map(noise(i), this.lower_val+1, this.higher_val-2, -1, this.facedetail_value-2);
+      let r = 4 + n;
+      x = r * cos(i * (360 / this.dimensionpoints)) 
+      y = r * sin(i * (360 / this.dimensionpoints)) *1.2
+      curveVertex(x+this.frame_movefacing, y);
+    }
+    endShape(CLOSE);
+    pop();
+
+    // 3rd Thickest head outline
+    push();
+    beginShape();
+       
+    noFill();
+    stroke(this.dimension_maincolour);
+    strokeWeight(0.01)
+
+    scale(0.66);
+
+    for (let i = 0; i < this.dimensionpoints; i++) {
+      let n = map(noise(i), this.lower_val+1, this.higher_val-2, -1, this.facedetail_value-2);
+      let r = 4 + n;
+      x = r * cos(i * (360 / this.dimensionpoints)) 
+      y = r * sin(i * (360 / this.dimensionpoints)) *1.2
+      curveVertex(x+this.frame_movefacing, y);
+    }
+    endShape(CLOSE);
+    pop();
+
+
+    
 
     //////////// HAIR COLOUR////
     this.hair_colour = this.orange;
@@ -207,14 +377,14 @@ function Face(facedetail_value,righteye_value, lefteye_value, mouthh_value) {
     push();
     strokeWeight(0.1);
 
-    stroke(this.hair_colour);
+    stroke(this.orginal_framecolour);
     this.points = 40;
   
        //first shape
        beginShape();
        
        noFill();
-       stroke(this.hair_colour);
+       stroke(this.orginal_framecolour);
        strokeWeight(0.1)
      
        for (let i = 0; i < this.points; i++) {

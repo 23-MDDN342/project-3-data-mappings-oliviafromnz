@@ -12,3 +12,8 @@ Next will play with the mouth - odeally want to do these:
 We will see - finding it a struggle to manipulate the circs knowing that everytime I refresh its random due to the noise function used....
 
 
+GROW IN DIFFERENT DIMENSIONS DEPENDING ON WHERE U LOOK
+if u look right you look at warm colours
+if you look kleft you look at cold colours
+
+
