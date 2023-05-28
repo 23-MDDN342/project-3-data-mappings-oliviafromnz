@@ -82,11 +82,11 @@ function Face(facedetail_value,righteye_value, lefteye_value, mouthh_value) {
     this.L_eyeX = positions.left_eye[0][0];
     this.L_eyeY = positions.left_eye[0][1];
 
-    this.headWidth = positions.chin[16][0] - positions.chin[0][0]; // Use 1st and last points of chin to get width
-    this.headHeight = positions.chin[8][1] - positions.nose_bridge[0][1]; // Top nose bridge point to bottom chin point
+    this.headWidth = positions.chin[16][0] - positions.chin[0][0]; 
+    this.headHeight = positions.chin[8][1] - positions.nose_bridge[0][1]; 
     
-    this.headSize_L = positions.nose_tip[2][0] - positions.chin[2][0]; // Size of left side head
-    this.headSize_R = positions.chin[14][0] - positions.nose_tip[2][0]; // Size of right side head
+    this.headSize_L = positions.nose_tip[2][0] - positions.chin[2][0]; 
+    this.headSize_R = positions.chin[14][0] - positions.nose_tip[2][0]; 
 
     this.left_faceedgeX = positions.chin[14][0]+1;
     this.left_faceedgeY = positions.chin[14][0]-2;
@@ -109,7 +109,7 @@ function Face(facedetail_value,righteye_value, lefteye_value, mouthh_value) {
 
     this.coldcolour_blue = color("#AFDBDF");
     this.coldcolour_green = color("#9BC070");
-    this.coldcolour_purple = color("#AA489B");
+    this.coldcolour_purple = color("#6008C8");
 
     this.left_maincolour;
     this.left_featurecolour;
@@ -120,6 +120,7 @@ function Face(facedetail_value,righteye_value, lefteye_value, mouthh_value) {
     this.dimension_maincolour =  this.warmcolour_orange;
     this.right_featurecolour = this.warmcolour_pink;
     this.right_othercolour = this.warmcolour_yellow;
+    this.dimension3_maincolour;
 
     //finding the short side of the face to define where the circle will appea
     // on each side
@@ -162,6 +163,7 @@ function Face(facedetail_value,righteye_value, lefteye_value, mouthh_value) {
       this.frame_movefacing2 = +1.2;
       this.dimension_maincolour = this.warmcolour_orange;
       this.orginal_framecolour = this.warmcolour_pink;
+      this.dimension3_maincolour = this.warmcolour_yellow;
 
 
      }
@@ -173,6 +175,8 @@ function Face(facedetail_value,righteye_value, lefteye_value, mouthh_value) {
       this.frame_movefacing2 = -1.2;
       this.dimension_maincolour = this.coldcolour_blue;
       this.orginal_framecolour = this.coldcolour_green;
+      this.dimension3_maincolour = this.coldcolour_purple;
+
 
      }
   
@@ -198,7 +202,7 @@ function Face(facedetail_value,righteye_value, lefteye_value, mouthh_value) {
     beginShape();
        
     noFill();
-    stroke(255,255,255);
+    stroke(this.dimension3_maincolour);
     strokeWeight(0.1)
 
     scale(0.7);
@@ -220,7 +224,7 @@ function Face(facedetail_value,righteye_value, lefteye_value, mouthh_value) {
     beginShape();
        
     noFill();
-    stroke(255,255,255);
+    stroke(this.dimension3_maincolour);
     strokeWeight(0.05)
 
     scale(0.7);
@@ -240,7 +244,7 @@ function Face(facedetail_value,righteye_value, lefteye_value, mouthh_value) {
     beginShape();
        
     noFill();
-    stroke(255,255,255);
+    stroke(this.dimension3_maincolour);
     strokeWeight(0.01)
 
     scale(0.66);
