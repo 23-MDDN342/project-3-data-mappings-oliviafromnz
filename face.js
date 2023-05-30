@@ -121,6 +121,7 @@ function Face(facedetail_value,righteye_value, lefteye_value, mouthh_value) {
     this.coldcolour_green = color("#9BC070");
     this.coldcolour_purple = color("#572E8E");
 
+
     this.left_maincolour;
     this.left_featurecolour; 
     this.left_othercolour;
@@ -139,6 +140,14 @@ function Face(facedetail_value,righteye_value, lefteye_value, mouthh_value) {
 
     this.second_dimen_trans;
     this.third_dimen_trans;
+
+    // 2nd dimension stroke weights
+    this.second_stroke_weight1;
+    this.second_stroke_weight2;
+    this.second_stroke_weight3;
+
+    this.tester_stroke;
+
 
 
     //finding the short side of the face to define where the circle will appea
@@ -190,6 +199,8 @@ function Face(facedetail_value,righteye_value, lefteye_value, mouthh_value) {
       this.dimension3_maincolour = this.warmcolour_yellow;
       this.seconddimension_trans = 255;
 
+
+
       this.eye_movefacing2nd = -1.5;
       this.eye_movefacing3rd = -1;
 
@@ -201,8 +212,10 @@ function Face(facedetail_value,righteye_value, lefteye_value, mouthh_value) {
       this.nose2nd_dimen = -0.5;
       this.nose3rd_dimen = -1;
 
-      this.rotateNose;
+      this.rotateNose=90;
       this.distanceBetween = this.headSize_R - this.headSize_L;
+
+      //this.tester_stroke ="blue";
 
 
      }
@@ -224,6 +237,8 @@ if (this.headSize_R > this.headSize_L){
   this.seconddimension_trans = 255;
 
   this.distanceBetween = this.headSize_L- this.headSize_R;
+
+  //this.tester_stroke ="orange";
   
   /// LEFT EYE
   this.eye_movefacing2nd = -2.5;
@@ -236,20 +251,144 @@ if (this.headSize_R > this.headSize_L){
   /// NOSE
   this.nose2nd_dimen = +0.5;
   this.nose3rd_dimen = +1;
+
+  this.rotateNose=90;
  }
 
+ console.log(this.distanceBetween)
 
-     else {
-      this.ear_trans2  = 255;
-      this.head_outline = 255;
-      this.seconddimension_trans = 0;
 
-     }
+ ////////////////////////////////// DIMENSIONS FACING LOGIC ///////////////////////
+ 
+ // facing forwards from -0.6-0 range
+ if (this.distanceBetween < 0 && this.distanceBetween > -0.6) {
+  this.tester_stroke = "blue";
+
+  // FACE FRAMES
+  this.D2_stroke1 = 0;
+  this.D2_stroke2 = 0;
+  this.D2_stroke2 = 0;
+
+  this.D3_stroke1 =0;
+  this.D3_stroke2 =0;
+  this.D3_stroke3 =0;
+  this.D3_stroke4 =0;
+
+  //EYE FRAMES LEFT
+  this.D2_EyeStroke1 =0;
+  this.D2_EyeStroke2 =0;
+  this.D2_EyeStroke3 =0;
+
+  this.D3_EyeStroke1 =0;
+  this.D3_EyeStroke2 =0;
+  this.D3_EyeStroke3 =0;
+
+  //EYE FRAMES RIGHT
+  this.D2_REyeStroke1 =0;
+  this.D2_REyeStroke2 =0;
+  this.D2_REyeStroke3 =0;
+ 
+  this.D3_REyeStroke1 =0;
+  this.D3_REyeStroke2 =0;
+  this.D3_REyeStroke3 =0;
+
+  // NOSE
+  this.D2_NoseStroke1 =0;
+
+  this.D3_NoseStroke1 =0;
+
+}
+
+// facing super to the side -------->
+else if (this.distanceBetween < -1){
+
+  this.tester_stroke ="orange";
+
+  // FACE FRAMES
+  this.D2_stroke1 = 0.1;
+  this.D2_stroke2 = 0.05;
+  this.D2_stroke2 = 0.01;
+
+  this.D3_stroke1 =0.05;
+  this.D3_stroke2 =0.09;
+  this.D3_stroke3 =0.3;
+  this.D3_stroke4 =0.1;
+
+    //EYE FRAMES LEFT
+  this.D2_EyeStroke1 =0.04;
+  this.D2_EyeStroke2 =0.1;
+  this.D2_EyeStroke3 =0.08;
+
+  this.D3_EyeStroke1 =0.04;
+  this.D3_EyeStroke2 =0.1;
+  this.D3_EyeStroke3 =0.08;
+  
+  //EYE FRAMES RIGHT
+  this.D2_REyeStroke1 =0.02;
+  this.D2_REyeStroke2 =0.1;
+ 
+  this.D3_REyeStroke1 =0.02;
+  this.D3_REyeStroke2 =0.1;
+
+  // NOSE
+  this.D2_NoseStroke1 =0.1;
+
+  this.D3_NoseStroke1 =0.1;
+
+
+  }
+
+  // facing between forward and side
+else{
+    this.tester_stroke ="red";
+
+    // FACE FRAMES
+    this.D2_stroke1 = 0.1;
+    this.D2_stroke2 = 0.05;
+    this.D2_stroke2 = 0.01;
+
+    this.D3_stroke1 =0;
+    this.D3_stroke2 =0;
+    this.D3_stroke3 =0;
+    this.D3_stroke4 =0;
+
+        //EYE FRAMES LEFT
+    this.D2_EyeStroke1 =0.04;
+    this.D2_EyeStroke2 =0.1;
+    this.D2_EyeStroke3 =0.08;
+
+    this.D3_EyeStroke1 =0;
+    this.D3_EyeStroke2 =0;
+    this.D3_EyeStroke3 =0;
+
+
+     //EYE FRAMES RIGHT
+     this.D2_REyeStroke1 =0.02;
+     this.D2_REyeStroke2 =0.1;
+ 
+     this.D3_REyeStroke1 =0;
+     this.D3_REyeStroke2 =0;
+
+    // NOSE
+    this.D2_NoseStroke1 =0.1;
+
+    this.D3_NoseStroke1 =0;
+
+ 
+    }
+
+
+
   
     push();
-     //noStroke();
-     fill(255, 255, 255,255);
+    strokeWeight(0.05);
+    stroke(this.tester_stroke);
+
+     fill(255,255,255);
      ellipse (this.right_faceedgeX, this.right_faceedgeY, 0.2, 0.2)
+
+     fill(255, 255, 255,255);
+     ellipse (this.left_faceedgeX, this.left_faceedgeY, 0.2, 0.2)
 
     beginShape();
     strokeWeight(0.05);
@@ -271,8 +410,11 @@ if (this.headSize_R > this.headSize_L){
     angleMode(DEGREES);
 
   
+  //*********************************************************1st Dimension ************************************************ */
   
-    //////////////////// FACE DETAIL ////////////////////
+  
+  
+  //////////////////// FACE DETAIL ////////////////////
     push();
     strokeWeight(0.1);
 
@@ -374,7 +516,6 @@ if (this.headSize_R > this.headSize_L){
 
     push();
     noFill();
-    strokeWeight(0.3);
     stroke(this.orginal_framecolour);
     this.points3 = 8;
   
@@ -474,7 +615,6 @@ if (this.headSize_R > this.headSize_L){
 
 // main nose shape
 push();
-strokeWeight(0.3);
 stroke(this.orginal_framecolour);
 noFill();
 
@@ -494,6 +634,8 @@ for (let i = 0; i <this.pointsnose; i++) {
 endShape(CLOSE);
 pop();
   
+  //*********************************************** 2nd Dimension ************************************************ */
+
     ///////////////////////// SECOND DIMENSION HEAD OUTLINE //////////////////////
     // Thickest head outline
 
@@ -502,7 +644,7 @@ pop();
        
     noFill();
     stroke(this.dimension_maincolour, this.second_dimen_trans);
-    strokeWeight(0.1)
+    strokeWeight(this.D2_stroke1)
 
     scale(2.5);
 
@@ -524,7 +666,7 @@ pop();
        
     noFill();
     stroke(this.dimension_maincolour, this.second_dimen_trans);
-    strokeWeight(0.05)
+    strokeWeight(this.D2_stroke2)
 
     scale(2.7);
 
@@ -544,7 +686,7 @@ pop();
        
     noFill();
     stroke(this.dimension_maincolour, this.second_dimen_trans);
-    strokeWeight(0.01)
+    strokeWeight(this.D2_stroke3)
 
     //scale(0.66);
 
@@ -563,14 +705,13 @@ pop();
 
     push();
     noFill();
-    strokeWeight(0.3);
-    stroke(this.dimension_maincolour, this.second_dimen_trans);
+    stroke(this.dimension_maincolour);
     this.points3 = 8;
   
     // outer thin shape
       beginShape();
       
-      strokeWeight(0.02); // small detail line weight
+      strokeWeight(this.D2_REyeStroke1); // small detail line weight
       for (let i = 0; i < this.points3; i++) {
         let n = map(noise(i), this.lower_val+0.5, this.higher_val, -2, this.righteye_value);
         let r = 3.4 + n;
@@ -583,7 +724,7 @@ pop();
     // main outline (thickest)
     beginShape();
     //
-    strokeWeight(0.1);
+    strokeWeight(this.D2_REyeStroke2);
     for (let i = 0; i < this.points3; i++) {
       let n = map(noise(i), this.lower_val+0.5, this.higher_val, -2, this.righteye_value);
       let r = 3 + n;
@@ -592,27 +733,14 @@ pop();
       curveVertex(this.averageRightEye[0]+this.eye_movefacing2nd_right,  this.averageRightEye[1]-3);
     }
     endShape(CLOSE);
-  
-    // // second outline (2nd thickest)
-    // beginShape();
-    // //
-    // strokeWeight(0.05);
-    // for (let i = 0; i < this.points3; i++) {
-    //   let n = map(noise(i), this.lower_val+0.5, this.higher_val, -2, this.righteye_value);
-    //   let r = 2.5 + n;
-    //   this.averageRightEye[0] = r * cos(i * (360 / this.points3));
-    //   this.averageRightEye[1] = r * sin(i * (360 / this.points3));
-    //   curveVertex(this.averageRightEye[0]+this.eye_movefacing2nd_right, this.averageRightEye[1]-3);
-    // }
-    //endShape(CLOSE);
+
 
 
 
     pop();
     //////////////////// LEFT EYE /////////////////////// SECOND DIMENSION
     push();
-    strokeWeight(0.3);
-    stroke(this.dimension_maincolour, this.second_dimen_trans);
+    stroke(this.dimension_maincolour);
     noFill();
   
     this.points4 = 10;
@@ -620,7 +748,7 @@ pop();
     // thinnest outer shape
     beginShape();
     //
-    strokeWeight(0.04);
+    strokeWeight(this.D2_EyeStroke1);
     for (let i = 0; i <this.points4; i++) {
       let n = map(noise(i), this.lower_val+0.5, this.higher_val, -2, this.lefteye_value);
       let r = 3.5 + n;
@@ -633,7 +761,7 @@ pop();
     // main eye shape (thickest)
     beginShape();
     noFill();
-    strokeWeight(0.1);
+    strokeWeight(this.D2_EyeStroke2);
     for (let i = 0; i < this.points4; i++) {
       let n = map(noise(i), this.lower_val, this.higher_val, -2, this.lefteye_value);
       let r = 2.5 + n;
@@ -646,7 +774,7 @@ pop();
     // second thinnest line shape
     beginShape();
     noFill();
-    strokeWeight(0.08);
+    strokeWeight(this.D2_EyeStroke3);
     for (let i = 0; i < this.points4; i++) {
       let n = map(noise(i), this.lower_val+0.5, this.higher_val, -2, this.lefteye_value);
       let r = 2.8 + n;
@@ -659,7 +787,6 @@ pop();
     //////////////////// NOSE ///////////////// SECOND DIMENSION
   // main nose shape
   push();
-  strokeWeight(0.3);
   stroke(this.dimension_maincolour, this.second_dimen_trans);
   noFill();
 
@@ -668,7 +795,7 @@ pop();
   beginShape();
   //
   rotate(this.rotateNose);
-  strokeWeight (0.1);
+  strokeWeight (this.D2_NoseStroke1);
   for (let i = 0; i <this.pointsnose; i++) {
     let n = map(noise(i), this.lower_val+0.5, this.higher_val, -2, this.nose_value);
     let r = 3 + n;
@@ -679,27 +806,9 @@ pop();
   endShape(CLOSE);
   pop();
 
-    ///////////// THIRD DIMENSION HEAD OUTLINE /////////////////
 
-    // push();
-    // beginShape();
-       
-    // noFill();
-    // stroke(this.dimension3_maincolour, this.seconddimension_trans);
-    // strokeWeight(0.1)
 
-    // scale(2.4);
-
-    // for (let i = 0; i < this.dimensionpoints; i++) {
-    //   let n = map(noise(i), this.lower_val+1, this.higher_val-2, -1, this.facedetail_value-2);
-    //   let r = 4 + n;
-    //   x = r * cos(i * (360 / this.dimensionpoints)) 
-    //   y = r * sin(i * (360 / this.dimensionpoints)) *1.2
-    //   curveVertex(x+this.frame_movefacing2, y);
-    // }
-    // endShape(CLOSE);
-    // pop();
-
+    //*********************************************** 3rd Dimension ************************************************ */
 
     // 2nd Thickest head outline
 
@@ -708,7 +817,7 @@ pop();
        
     noFill();
     stroke(this.dimension3_maincolour, this.seconddimension_trans);
-    strokeWeight(0.05)
+    strokeWeight(this.D3_stroke1)
 
     scale(2);
 
@@ -728,7 +837,7 @@ pop();
        
     noFill();
     stroke(this.dimension3_maincolour, this.seconddimension_trans);
-    strokeWeight(0.09)
+    strokeWeight(this.D3_stroke2)
     scale(2.4);
 
     for (let i = 0; i < this.dimensionpoints; i++) {
@@ -740,18 +849,18 @@ pop();
     }
     endShape(CLOSE);
     pop();
+
    //////////// RIGHT EYE ////////////////// THIRD DIMENSION
 
    push();
    noFill();
-   strokeWeight(0.3);
    stroke(this.dimension3_maincolour);
    this.points3 = 8;
  
    // outer thin shape
      beginShape();
      
-     strokeWeight(0.02); // small detail line weight
+     strokeWeight(this.D3_REyeStroke1); // small detail line weight
      for (let i = 0; i < this.points3; i++) {
        let n = map(noise(i), this.lower_val+0.5, this.higher_val, -2, this.righteye_value);
        let r = 3.4 + n;
@@ -764,7 +873,7 @@ pop();
    // main outline (thickest)
    beginShape();
    //
-   strokeWeight(0.1);
+   strokeWeight(this.D3_REyeStroke2);
    for (let i = 0; i < this.points3; i++) {
      let n = map(noise(i), this.lower_val+0.5, this.higher_val, -2, this.righteye_value);
      let r = 3 + n;
@@ -776,7 +885,6 @@ pop();
 
     //////////////////// LEFT EYE /////////////////////// THIRD DIMENSION
     push();
-    strokeWeight(0.3);
     stroke(this.dimension3_maincolour);
     noFill();
   
@@ -785,7 +893,7 @@ pop();
     // thinnest outer shape
     beginShape();
     //
-    strokeWeight(0.04);
+    strokeWeight(this.D3_EyeStroke1);
     for (let i = 0; i <this.points4; i++) {
       let n = map(noise(i), this.lower_val+0.5, this.higher_val, -2, this.lefteye_value);
       let r = 3.5 + n;
@@ -798,7 +906,7 @@ pop();
     // main eye shape (thickest)
     beginShape();
     noFill();
-    strokeWeight(0.1);
+    strokeWeight(this.D3_EyeStroke2);
     for (let i = 0; i < this.points4; i++) {
       let n = map(noise(i), this.lower_val, this.higher_val, -2, this.lefteye_value);
       let r = 2.5 + n;
@@ -811,7 +919,7 @@ pop();
     // second thinnest line shape
     beginShape();
     noFill();
-    strokeWeight(0.08);
+    strokeWeight(this.D3_EyeStroke3);
     for (let i = 0; i < this.points4; i++) {
       let n = map(noise(i), this.lower_val+0.5, this.higher_val, -2, this.lefteye_value);
       let r = 2.8 + n;
@@ -830,7 +938,6 @@ pop();
   ////////////////////////////////// NOSE ///////////////// THIRD DIMENSION
 // main nose shape
 push();
-strokeWeight(0.3);
 stroke(this.dimension3_maincolour);
 noFill();
 
@@ -839,7 +946,7 @@ this.pointsnose = 12;
 beginShape();
 //
 rotate(this.rotateNose);
-strokeWeight (0.1);
+strokeWeight (this.D3_NoseStroke1);
 for (let i = 0; i <this.pointsnose; i++) {
   let n = map(noise(i), this.lower_val+0.5, this.higher_val, -2, this.nose_value);
   let r = 3 + n;
