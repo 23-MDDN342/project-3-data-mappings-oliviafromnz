@@ -45,6 +45,9 @@ function Face(facedetail_value,righteye_value, lefteye_value, mouthh_value) {
   this.orange = color('#E98F36');
   this.tourq = color('#36E9D3');
 
+  this.nose2nd_dimen;
+  this.rotateNose;
+
 
   // these are state variables for a face
   // (your variables should be different!)
@@ -174,6 +177,9 @@ function Face(facedetail_value,righteye_value, lefteye_value, mouthh_value) {
      // if u look left its gray and right its white
      /// LOOK TO FAR RIGHT
      if(this.headSize_L > this.headSize_R){
+      this.distanceBetween = this.headSize_R - this.headSize_L;
+
+
       this.ear_trans2  = 255;
       this.head_outline = 255;
       this.frame_movefacing = +0.3;
@@ -192,31 +198,46 @@ function Face(facedetail_value,righteye_value, lefteye_value, mouthh_value) {
 
       this.second_dimen_trans = 0;
 
-     }
-     
+      this.nose2nd_dimen = -0.5;
+      this.nose3rd_dimen = -1;
 
-     // makes ear line dissapear when head is facing right
-     else if (this.headSize_R > this.headSize_L){
-      this.ear_trans2  = 0;
-      this.head_outline = 100;
-      this.frame_movefacing = -0.3;
-      this.frame_movefacing2 = -0.9;
-
-      this.dimension_maincolour = this.coldcolour_blue;
-      this.orginal_framecolour = this.coldcolour_purple;
-      this.dimension3_maincolour = this.coldcolour_green;
-      this.seconddimension_trans = 255;
-      
-      /// LEFT EYE
-      this.eye_movefacing2nd = -2.5;
-      this.eye_movefacing3rd = -3;
-
-      // RIGHT EYE
-      this.eye_movefacing2nd_right = +1;
-      this.eye_movefacing3rd_right = 0.5;
+      this.rotateNose;
+      this.distanceBetween = this.headSize_R - this.headSize_L;
 
 
      }
+
+
+
+// when facing right
+if (this.headSize_R > this.headSize_L){
+  this.distanceBetween = this.headSize_L - this.headSize_R;
+
+  this.ear_trans2  = 0;
+  this.head_outline = 100;
+  this.frame_movefacing = -0.3;
+  this.frame_movefacing2 = -0.9;
+
+  this.dimension_maincolour = this.coldcolour_blue;
+  this.orginal_framecolour = this.coldcolour_purple;
+  this.dimension3_maincolour = this.coldcolour_green;
+  this.seconddimension_trans = 255;
+
+  this.distanceBetween = this.headSize_L- this.headSize_R;
+  
+  /// LEFT EYE
+  this.eye_movefacing2nd = -2.5;
+  this.eye_movefacing3rd = -3;
+
+  // RIGHT EYE
+  this.eye_movefacing2nd_right = +1;
+  this.eye_movefacing3rd_right = 0.5;
+
+  /// NOSE
+  this.nose2nd_dimen = +0.5;
+  this.nose3rd_dimen = +1;
+ }
+
 
      else {
       this.ear_trans2  = 255;
@@ -242,57 +263,13 @@ function Face(facedetail_value,righteye_value, lefteye_value, mouthh_value) {
     pop();
 
   
-    
-
-    //////////// HAIR COLOUR////
-    // this.hair_colour = this.orange;
-    // if (this.Haircolour_value > 50){
-    //   this.hair_colour = this.orange;
-    // }
-
-    // else{
-    // this.hair_colour= this.tourq;
-    // }
-
+  
     scale(0.5);
   
   
     scale(0.6);
     angleMode(DEGREES);
-  
-  
-    
-     /////////////////// FACE BASE CIRC ///////////////////////////
-    //  push();
-  
-    //  noFill();
-    //  stroke(255,192,203);
-    //  strokeWeight(0.3);
-   
 
-    //  this.points2 = 40;
-   
-    //  //*** Pheobes Code for circs */
-  
-    //  // outer shape
-    //  beginShape();
-
-    //  ////////////// EXPERIMENTAL //////////
-    //  //fill(255,255, 255);
-    //  //ellipse(this.averageRightEye[0]+1.5, this.averageRightEye[1]-3, 1, 1);
-    //  //ellipse(this.averageLeftEye[0]-2, this.averageLeftEye[1]-3, 1, 1);
-
-    //  ///////////////////////////////////////
-    //  //
-    //  for (let i = 0; i < this.points2; i++) {
-    //    let n = map(noise(i), this.lower_val, this.higher_val, -1, this.facedetail_value);
-    //    let r = 9 + n;
-    //    x = r * cos(i * (360 / this.points2)); // how warped in e.g goes skinnier
-    //    y = r * sin(i * (360 / this.points2)) *1.2 // how flat it is as a 3d 
-    //    curveVertex(x, y);
-    //  }
-    //  endShape(CLOSE);
-    //  pop();
   
   
     //////////////////// FACE DETAIL ////////////////////
@@ -493,6 +470,29 @@ function Face(facedetail_value,righteye_value, lefteye_value, mouthh_value) {
     }
     endShape(CLOSE);
 
+    ////////// NOSE ////////////
+
+// main nose shape
+push();
+strokeWeight(0.3);
+stroke(this.orginal_framecolour);
+noFill();
+
+this.pointsnose = 12;
+
+beginShape();
+//
+strokeWeight (0.1);
+rotate(this.rotateNose);
+for (let i = 0; i <this.pointsnose; i++) {
+  let n = map(noise(i), this.lower_val+0.5, this.higher_val, -2, this.nose_value);
+  let r = 2.8 + n;
+  this.averageNose[0] = r * cos(i * (360 / this.pointsnose));
+  this.averageNose[1] = r * sin(i * (250 / this.pointsnose));
+  curveVertex(this.averageNose[0],this.averageNose[1]);
+}
+endShape(CLOSE);
+pop();
   
     ///////////////////////// SECOND DIMENSION HEAD OUTLINE //////////////////////
     // Thickest head outline
@@ -656,6 +656,28 @@ function Face(facedetail_value,righteye_value, lefteye_value, mouthh_value) {
     }
     endShape(CLOSE);
 
+    //////////////////// NOSE ///////////////// SECOND DIMENSION
+  // main nose shape
+  push();
+  strokeWeight(0.3);
+  stroke(this.dimension_maincolour, this.second_dimen_trans);
+  noFill();
+
+  this.pointsnose = 12;
+
+  beginShape();
+  //
+  rotate(this.rotateNose);
+  strokeWeight (0.1);
+  for (let i = 0; i <this.pointsnose; i++) {
+    let n = map(noise(i), this.lower_val+0.5, this.higher_val, -2, this.nose_value);
+    let r = 3 + n;
+    this.averageNose[0] = r * cos(i * (360 / this.pointsnose));
+    this.averageNose[1] = r * sin(i * (250 / this.pointsnose));
+    curveVertex(this.averageNose[0],this.averageNose[1] +this.nose2nd_dimen);
+  }
+  endShape(CLOSE);
+  pop();
 
     ///////////// THIRD DIMENSION HEAD OUTLINE /////////////////
 
@@ -802,72 +824,31 @@ function Face(facedetail_value,righteye_value, lefteye_value, mouthh_value) {
     
 
 
-////////// NOSE ////////////
 
-// if bridge tip is going in a bigger deirection than top of nose and going towards the right, then
-// a second nose is created in the inner for dimension
 
-this.facingrsidestroke = 0.05;
-this.facingfrontstroke= 0;
 
-    this.MidNoseTip = positions.nose_tip[2];
-    this.topofNose = positions.nose_tip[0];
-
-    this.DrawinnerNose;
-
-  if (this.MidNoseTip < this.topofNose){
-    this.DrawinnerNose = this.facingrsidestroke
-  }
-
-  else{
-    this.DrawinnerNose = this.facingfrontstroke
-  }
-
+  ////////////////////////////////// NOSE ///////////////// THIRD DIMENSION
 // main nose shape
 push();
-    strokeWeight(0.3);
-    stroke(this.orginal_framecolour);
-    noFill();
-  
-    this.pointsnose = 12;
-  
-    beginShape();
-    //
-    strokeWeight (0.1);
-    for (let i = 0; i <this.pointsnose; i++) {
-      let n = map(noise(i), this.lower_val+0.5, this.higher_val, -2, this.nose_value);
-      let r = 2.8 + n;
-      this.averageNose[0] = r * cos(i * (360 / this.pointsnose));
-      this.averageNose[1] = r * sin(i * (250 / this.pointsnose));
-      curveVertex(this.averageNose[0],this.averageNose[1]-1);
-    }
-    endShape(CLOSE);
-  pop();
+strokeWeight(0.3);
+stroke(this.dimension3_maincolour);
+noFill();
 
+this.pointsnose = 12;
 
-  ///// inner circle for nose 1
-
-  push();
-    strokeWeight(0.3);
-    stroke(this.orginal_framecolour);
-    noFill();
-  
-    scale(0.7);
-    this.pointsnose = 12;
-  
-    beginShape();
-    //
-    strokeWeight (this.DrawinnerNose);
-    for (let i = 0; i <this.points4; i++) {
-      let n = map(noise(i), this.lower_val+0.5, this.higher_val, -2, this.lefteye_value);
-      let r = 3 + n;
-      this.averageNose[0] = r * cos(i * (360 / this.pointsnose));
-      this.averageNose[1] = r * sin(i * (250 / this.pointsnose));
-      curveVertex(this.averageNose[0],this.averageNose[1]-1);
-    }
-    endShape(CLOSE);
-  pop();
-
+beginShape();
+//
+rotate(this.rotateNose);
+strokeWeight (0.1);
+for (let i = 0; i <this.pointsnose; i++) {
+  let n = map(noise(i), this.lower_val+0.5, this.higher_val, -2, this.nose_value);
+  let r = 3 + n;
+  this.averageNose[0] = r * cos(i * (360 / this.pointsnose));
+  this.averageNose[1] = r * sin(i * (250 / this.pointsnose));
+  curveVertex(this.averageNose[0],this.averageNose[1] +this.nose3rd_dimen);
+}
+endShape(CLOSE);
+pop();
 
     ///////////////// MOUTH MOVING /////////////
 
@@ -1042,7 +1023,7 @@ this.mouthsquishfactor;
   /* set internal properties based on list numbers 0-100 */
   this.setProperties = function(settings) {
     // this.num_eyes = int(map(settings[0], 0, 100, 1, 2));
-    // this.eye_shift = map(settings[1], 0, 100, -2, 2);
+     this.rotateNose = map(settings[1], 0, 100, -90, 270);
      this.nose_value = map(settings[2], 0, 100, 0, 4);
     
     this.facedetail_value = map(settings[3], 0, 100, 0.5, 7);
@@ -1056,7 +1037,7 @@ this.mouthsquishfactor;
   this.getProperties = function() {
     let settings = new Array(4);
     // settings[0] = map(this.num_eyes, 1, 2, 0, 100);
-    // settings[1] = map(this.eye_shift, -2, 2, 0, 100);
+    settings[1] = map(this.rotateNose, 270, -90, 0, 100);
     settings[2] = map(this.nose_value, 0, 10, 0, 100);
 
     settings[3] = map(this.facedetail_value, 0.5, 7, 0, 100);

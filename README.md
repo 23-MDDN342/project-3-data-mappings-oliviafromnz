@@ -16,4 +16,8 @@ GROW IN DIFFERENT DIMENSIONS DEPENDING ON WHERE U LOOK
 if u look right you look at warm colours
 if you look kleft you look at cold colours
 
+the more to the side you look the more the nose expands and draws another dimension on top of it, as you face forward slowly each dimension goes
+
+
+if head l and right / 4 = 25% then xxx ?
 
