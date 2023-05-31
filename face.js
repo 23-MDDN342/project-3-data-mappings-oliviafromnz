@@ -171,15 +171,7 @@ function Face(facedetail_value,righteye_value, lefteye_value, mouthh_value) {
     // fill(255, 255, 255,this.ear_trans);
     // ellipse (this.left_faceedgeX, this.left_faceedgeY, 0.2, 0.2)
 
-    beginShape();
-    strokeWeight(0.05);
-    stroke(255, 255, 255, this.ear_trans);
-    noFill();
-  vertex(this.left_faceedgeX, this.left_faceedgeY);
-  bezierVertex(this.left_faceedgeX - 0.2, this.left_faceedgeY+0.3, this.left_faceedgeX +0.1, this.left_faceedgeY+0.4, this.left_faceedgeX-0.2, this.left_faceedgeY+0.6);
-  endShape();
 
-    pop();
 
      ///////// LEFT EAR ///////////
 
@@ -212,7 +204,7 @@ function Face(facedetail_value,righteye_value, lefteye_value, mouthh_value) {
       this.nose2nd_dimen = -0.5;
       this.nose3rd_dimen = -1;
 
-      this.rotateNose=90;
+      this.rotateNose;
       this.distanceBetween = this.headSize_R - this.headSize_L;
 
       //this.tester_stroke ="blue";
@@ -252,7 +244,7 @@ if (this.headSize_R > this.headSize_L){
   this.nose2nd_dimen = +0.5;
   this.nose3rd_dimen = +1;
 
-  this.rotateNose=90;
+  this.rotateNose;
  }
 
  console.log(this.distanceBetween)
@@ -377,29 +369,92 @@ else{
  
     }
 
-
+  this.right_earpts = 10;
 
   
-    push();
-    strokeWeight(0.05);
-    stroke(this.tester_stroke);
+    // push();
+    // strokeWeight(0.05);
+    // stroke(this.tester_stroke);
 
-     fill(255,255,255);
-     ellipse (this.right_faceedgeX, this.right_faceedgeY, 0.2, 0.2)
+    //  fill(255,255,255);
+    //  ellipse (this.right_faceedgeX, this.right_faceedgeY, 0.2, 0.2)
 
-     fill(255, 255, 255,255);
-     ellipse (this.left_faceedgeX, this.left_faceedgeY, 0.2, 0.2)
+    //  fill(255, 255, 255,255);
+    //  ellipse (this.left_faceedgeX, this.left_faceedgeY, 0.2, 0.2)
 
-    beginShape();
-    strokeWeight(0.05);
-    stroke(this.dimension_maincolour);
-    noFill();
-    vertex(this.right_faceedgeX, this.right_faceedgeY);
-    bezierVertex(this.right_faceedgeX - 0.2, this.right_faceedgeY+0.3, this.right_faceedgeX -0.3, this.right_faceedgeY+0.4, this.right_faceedgeX-0.2, this.right_faceedgeY+0.6);
 
-    endShape();
+    // // RIGHT EAR
+    // beginShape();
+    // strokeWeight(0.05);
+    // stroke(this.dimension_maincolour);
+    // noFill();
+    // vertex(this.right_faceedgeX, this.right_faceedgeY);
+    // bezierVertex(this.right_faceedgeX - 0.2, this.right_faceedgeY+0.3, this.right_faceedgeX -0.3, this.right_faceedgeY+0.4, this.right_faceedgeX-0.2, this.right_faceedgeY+0.6);
 
-    pop();
+    // endShape();
+
+
+    // /// LEFT EAR
+    // beginShape();
+    // strokeWeight(0.05);
+    // stroke(255, 255, 255);
+    // noFill();
+    // vertex(this.left_faceedgeX, this.left_faceedgeY); // Starting vertex
+    // bezierVertex(
+    //   this.left_faceedgeX - 0.2, this.left_faceedgeY + 0.3, // Control point 1
+    //   this.left_faceedgeX + 0.1, this.left_faceedgeY + 0.4, // Control point 2
+    //   this.left_faceedgeX - 0.2, this.left_faceedgeY + 0.6, // Ending vertex
+      
+    // );
+
+    // endShape();
+
+
+// /// RIGHT EAR
+//     noFill();
+//     let centerX = this.right_faceedgeX-3; // X-coordinate of the center point
+//     let centerY = this.right_faceedgeY; // Y-coordinate of the center point
+//     let radius = 2; // Radius of the arc
+//     let startAngle =-2000; // Start angle in degrees
+//     let stopAngle = -5000; // Stop angle in degrees
+
+//     push();
+//     scale(0.5);
+//     stroke(this.dimension3_maincolour);
+//     arc(centerX, centerY, radius, radius, radians(startAngle), radians(stopAngle));
+//     pop();
+
+//     push();
+//     stroke(this.dimension_maincolour);
+//     scale(0.51);
+//     arc(centerX-0.3, centerY, radius, radius, radians(startAngle), radians(stopAngle));
+//     pop();
+
+//     push();
+//     stroke(this.orginal_framecolour);
+//     scale(0.52);
+//     arc(centerX-0.6, centerY, radius, radius, radians(startAngle), radians(stopAngle));
+//     pop();
+    
+// // RIGHT EAR
+//     noFill();
+//     let centerXL = this.left_faceedgeX+1; // X-coordinate of the center point
+//     let centerYL = this.left_faceedgeY; // Y-coordinate of the center point
+//     let startAngleL =8000; // Start angle in degrees
+//     let stopAngleL = -9000; // Stop angle in degrees
+
+//     arc(centerXL, centerYL, radius, radius, radians(startAngleL), radians(stopAngleL));
+
+
+//     pop();
+
+//     beginShape();
+//        scale(0.2);
+//     noFill();
+//     stroke(255, 255, 255);
+//     strokeWeight(0.01)
+
+//     pop();
 
   
   
@@ -931,10 +986,6 @@ pop();
 
     
 
-
-
-
-
   ////////////////////////////////// NOSE ///////////////// THIRD DIMENSION
 // main nose shape
 push();
@@ -959,27 +1010,84 @@ pop();
 
     ///////////////// MOUTH MOVING /////////////
 
-// if mouth is closed then squish the mouth and get rid of inner circle
-// if mouth is smiling with teeth then do shocked face squished
-// if half teeth then shoked face
+if (this.mouthh_value >1 && this.mouthh_value< 3){
+  push();
+  noFill();
+  strokeWeight(0.1);
+  stroke(this.orginal_framecolour);
 
-this.mouthsquishfactor;
+  this.points5 = 16;
 
-    this.mouthsquishY = 250;
-    this.Mouthnotsquish = 360;
+  // main shape outline
+  beginShape();
+ // noFill();
+  strokeWeight(0.2);
+  for (let i = 0; i < this.points5; i++) {
+    let n = map(noise(i), this.lower_val, this.higher_val-1, -2, this.mouthh_value);
+    let r = 3 + n;
+    this.averageMouth[0] = r * cos(i * (340 / this.points5));
+    this.averageMouth[1] = r * sin(i * (260 / this.points5));
+    curveVertex(this.averageMouth[0], this.averageMouth[1]+3);
+  }
+  endShape(CLOSE);
 
-    this.upperlippoint = positions.top_lip[3];
-    this.lowerLeft_lippoint = positions.top_lip[0];
+   // thinner shape outline
+  beginShape();
+ // noFill();
+  strokeWeight(0.1);
+  for (let i = 0; i < this.points5; i++) {
+    let n = map(noise(i), this.lower_val, this.higher_val-1, -2, this.mouthh_value);
+    let r = 2.5 + n;
+    this.averageMouth[0] = r * cos(i * (340 / this.points5));
+    this.averageMouth[1] = r * sin(i * (260 / this.points5));
+    curveVertex(this.averageMouth[0], this.averageMouth[1]+3);
+  }
+  endShape(CLOSE);
 
-    if (this.upperlippoint > this.lowerLeft_lippoint){
-      this.mouthsquishfactor =  this.Mouthnotsquish
-    }
 
-    else{
-      this.mouthsquishfactor = this.mouthsquishY
-    }
+  pop();
+}
+
+else if(this.mouthh_value < 1){
+
+  push();
+  noFill();
+  strokeWeight(0.1);
+  stroke(this.orginal_framecolour);
+
+  this.points5 = 16;
+
+  // main shape outline
+  beginShape();
+ // noFill();
+  strokeWeight(0.2);
+  for (let i = 0; i < this.points5; i++) {
+    let n = map(noise(i), this.lower_val, this.higher_val-1, -2, this.mouthh_value);
+    let r = 3 + n;
+    this.averageMouth[0] = r * cos(i * (360 / this.points5));
+    this.averageMouth[1] = r * sin(i * (180 / this.points5));
+    curveVertex(this.averageMouth[0], this.averageMouth[1]+3);
+  }
+  endShape(CLOSE);
+
+   // thinner shape outline
+  beginShape();
+ // noFill();
+  strokeWeight(0.1);
+  for (let i = 0; i < this.points5; i++) {
+    let n = map(noise(i), this.lower_val, this.higher_val-1, -2, this.mouthh_value);
+    let r = 2.5 + n;
+    this.averageMouth[0] = r * cos(i * (360 / this.points5));
+    this.averageMouth[1] = r * sin(i * (180 / this.points5));
+    curveVertex(this.averageMouth[0], this.averageMouth[1]+3);
+  }
+  endShape(CLOSE);
 
 
+  pop();
+
+}
+else{
 
     push();
     noFill();
@@ -987,19 +1095,6 @@ this.mouthsquishfactor;
     stroke(this.orginal_framecolour);
   
     this.points5 = 16;
-  
-   // outer thin detail
-   beginShape();
-   noFill();
-   strokeWeight(0.02);
-   for (let i = 0; i < this.points5; i++) {
-     let n = map(noise(i), this.lower_val, this.higher_val-1, -2, this.mouthh_value);
-     let r = 1.8 + n;
-     this.averageMouth[0] = r * cos(i * (360 / this.points5));
-     this.averageMouth[1] = r * sin(i * (this.mouthsquishfactor / this.points5));
-     curveVertex(this.averageMouth[0], this.averageMouth[1]+3);
-   }
-   endShape(CLOSE);
   
     // main shape outline
     beginShape();
@@ -1026,13 +1121,8 @@ this.mouthsquishfactor;
       curveVertex(this.averageMouth[0], this.averageMouth[1]+3);
     }
     endShape(CLOSE);
-
-    
-
-
-  
     pop();
-
+  }
 
     
 
@@ -1130,8 +1220,8 @@ this.mouthsquishfactor;
   /* set internal properties based on list numbers 0-100 */
   this.setProperties = function(settings) {
     // this.num_eyes = int(map(settings[0], 0, 100, 1, 2));
-     this.rotateNose = map(settings[1], 0, 100, -90, 270);
-     this.nose_value = map(settings[2], 0, 100, 0, 4);
+    this.rotateNose = map(settings[1], 0, 100, -90, 270);
+    this.nose_value = map(settings[2], 0, 100, 0, 4);
     
     this.facedetail_value = map(settings[3], 0, 100, 0.5, 7);
     this.righteye_value= map(settings[4], 0, 100, 0, 3);
