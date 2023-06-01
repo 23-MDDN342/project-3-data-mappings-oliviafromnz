@@ -1,19 +1,8 @@
-/*
- * FaceMap class - holds all informaiton about one mapped
- * face and is able to draw itself.
- */  
-
 // remove this or set to false to enable full program (load will be slower)
 var DEBUG_MODE = true;
 
 // this can be used to set the number of sliders to show
 var NUM_SLIDERS = 6;
-
-// other variables can be in here too
-// here's some examples for colors used
-
-
-//const stroke_color = [95, 52, 8];
 
 // example of a global function
 // given a segment, this returns the average point [x, y]
@@ -38,15 +27,9 @@ function Face(facedetail_value,righteye_value, lefteye_value, mouthh_value) {
   this.righteye_value = 3;
   this.lefteye_value = 6;
   this.mouthh_value = 5;
-  this.Haircolour_value;
-  this.chizzeled_value;
   this.nose_value;
-
-  this.orange = color('#E98F36');
-  this.tourq = color('#36E9D3');
-
   this.nose2nd_dimen;
-  //this.rotateNose;
+  this.right_earpts = 10;
 
 
   /*
@@ -54,19 +37,22 @@ function Face(facedetail_value,righteye_value, lefteye_value, mouthh_value) {
    *    chin, right_eye, left_eye, right_eyebrow, left_eyebrow
    *    bottom_lip, top_lip, nose_tip, nose_bridge, 
    */  
+
+  // ************************* DRAW FACE *********************************************
   this.draw = function(positions) {
 
     this.lower_val = 0;
     this.higher_val = 5;
-    //let x, y;
+
+    // AVERAGE LOCATIONS //
 
     this.averageRightEye = segment_average(positions.right_eye);
     this.averageLeftEye = segment_average(positions.left_eye);
-
     this.averageNose = segment_average (positions.nose_bridge); // find average nose bridge location
-
     this.averageMouth = segment_average(positions.top_lip);
 
+
+    // FACIAL POINTS LOCATIONS //
     this.R_eyeX = positions.right_eye[0][0];
     this.R_eyeY = positions.right_eye[0][1];
 
@@ -79,14 +65,14 @@ function Face(facedetail_value,righteye_value, lefteye_value, mouthh_value) {
     this.headSize_L = positions.nose_tip[2][0] - positions.chin[2][0]; 
     this.headSize_R = positions.chin[14][0] - positions.nose_tip[2][0]; 
 
-
-
     this.left_faceedgeX = positions.chin[14][0]+1;
     this.left_faceedgeY = positions.chin[14][0]-2;
 
     this.right_faceedgeX = positions.chin[2][0]-1;
     this.right_faceedgeY = positions.chin[2][0]+2;
 
+
+    // EXTRA VARIABLES
     this.frame_movefacing;
     this.frame_movefacing2;
 
@@ -94,10 +80,11 @@ function Face(facedetail_value,righteye_value, lefteye_value, mouthh_value) {
     this.eye_movefacing2nd2;
 
     this.ear_trans;
-
     this.ear_points = 8;
     this.points = 40;
     this.dimensionpoints = this.points-2;
+
+    // dimension colours //
 
     this.warmcolour_orange = color("#E36A25");
     this.warmcolour_yellow = color("#FEBD11");
@@ -107,39 +94,26 @@ function Face(facedetail_value,righteye_value, lefteye_value, mouthh_value) {
     this.coldcolour_green = color("#9BC070");
     this.coldcolour_purple = color("#572E8E");
 
-
-    this.left_maincolour;
-    this.left_featurecolour; 
-    this.left_othercolour;
-
     this.eye_movefacing2nd_right;
     this.eye_movefacing3rd_right;
-
     this.orginal_framecolour;
 
     this.dimension_maincolour =  this.warmcolour_orange;
-    this.right_featurecolour = this.warmcolour_pink;
-    this.right_othercolour = this.warmcolour_yellow;
     this.dimension3_maincolour;
-
-    this.seconddimension_trans;
-
-    this.second_dimen_trans;
-    this.third_dimen_trans;
 
     // 2nd dimension stroke weights
     this.second_stroke_weight1;
     this.second_stroke_weight2;
     this.second_stroke_weight3;
 
-    this.tester_stroke;
+    //this.tester_stroke;
 
 
 
-    //finding the short side of the face to define where the circle will appea
-    // on each side
 
-    ////// RIGHT EAR /////////////////
+    // ************************* DRAW EARS *********************************************
+
+    ////// LINE TRANSPARENCY EAR ////
     // makes ear line stroke appear when head facing left and center on
     if(this.headSize_L <= this.headSize_R){
       this.ear_trans  = 255;
@@ -151,76 +125,70 @@ function Face(facedetail_value,righteye_value, lefteye_value, mouthh_value) {
       this.ear_trans  = 0;
       this.head_outline = 255;
      }
-  
-    push();
-    // noStroke();
-    // fill(255, 255, 255,this.ear_trans);
-    // ellipse (this.left_faceedgeX, this.left_faceedgeY, 0.2, 0.2)
 
-
-
-     ///////// LEFT EAR ///////////
-
-     // if u look left its gray and right its white
-     /// LOOK TO FAR RIGHT
-     if(this.headSize_L > this.headSize_R){
+  // ************************* LOOK LEFT *********************************************
+  // if u look left its gray and right its white
+  /// LOOK TO FAR RIGHT
+  if(this.headSize_L > this.headSize_R){
       this.distanceBetween = this.headSize_R - this.headSize_L;
-
 
       this.ear_trans2  = 255;
       this.head_outline = 255;
-      this.frame_movefacing = +0.3;
-      this.frame_movefacing2 = +0.9;
 
       this.dimension_maincolour = this.warmcolour_orange;
       this.orginal_framecolour = this.warmcolour_pink;
       this.dimension3_maincolour = this.warmcolour_yellow;
       this.seconddimension_trans = 255;
 
+      // DIMENSION LOCATION SHIFTS //
 
+      // FACE
+      this.frame_movefacing = +0.3;
+      this.frame_movefacing2 = +0.9;
 
+      // EYE LEFT
       this.eye_movefacing2nd = -1.5;
       this.eye_movefacing3rd = -1;
 
+      // RIGHT EYE
       this.eye_movefacing2nd_right = +2;
       this.eye_movefacing3rd_right = +2.5;
 
-      this.second_dimen_trans = 0;
-
+      // NOSE
       this.nose2nd_dimen = +0.5;
       this.nose3rd_dimen = +1;
 
+      //MOUTH
       this.mouth2nd_dimen = +0.5;
       this.mouth3rd_dimen = +1;
 
-     // this.rotateNose;
-      this.distanceBetween = this.headSize_R - this.headSize_L;
-
-      //this.tester_stroke ="blue";
-
-
-     }
+      this.distanceBetween = this.headSize_R - this.headSize_L; // Phoebes code //
+  }
 
 
 
-// when facing right
+// ************************* LOOK RIGHT *********************************************
 if (this.headSize_R > this.headSize_L){
-  this.distanceBetween = this.headSize_L - this.headSize_R;
 
+  
   this.ear_trans2  = 0;
   this.head_outline = 100;
-  this.frame_movefacing = -0.3;
-  this.frame_movefacing2 = -0.9;
+
 
   this.dimension_maincolour = this.coldcolour_blue;
   this.orginal_framecolour = this.coldcolour_purple;
   this.dimension3_maincolour = this.coldcolour_green;
   this.seconddimension_trans = 255;
 
-  this.distanceBetween = this.headSize_L- this.headSize_R;
+  this.distanceBetween = this.headSize_L - this.headSize_R; // Phoebes code //
 
-  //this.tester_stroke ="orange";
   
+  // DIMENSION LOCATION SHIFTS //
+
+  // FACE SHIFT
+  this.frame_movefacing = -0.3;
+  this.frame_movefacing2 = -0.9;
+
   /// LEFT EYE
   this.eye_movefacing2nd = -2.5;
   this.eye_movefacing3rd = -3;
@@ -233,20 +201,16 @@ if (this.headSize_R > this.headSize_L){
   this.nose2nd_dimen = -0.5;
   this.nose3rd_dimen = -1;
 
+  // MOUTH
   this.mouth2nd_dimen = -0.5;
   this.mouth3rd_dimen = -1;
 
- // this.rotateNose;
  }
 
- console.log(this.distanceBetween)
-
-
- ////////////////////////////////// DIMENSIONS FACING LOGIC ///////////////////////
+// ************************************** DIMENSION VISIBILITY  *********************************************
  
  // facing forwards from -0.6-0 range
  if (this.distanceBetween < 0 && this.distanceBetween > -0.6) {
-  this.tester_stroke = "blue";
 
   // FACE FRAMES
   this.D2_stroke1 = 0;
@@ -294,8 +258,6 @@ if (this.headSize_R > this.headSize_L){
 // facing super to the side -------->
 else if (this.distanceBetween < -1){
 
-  this.tester_stroke ="orange";
-
   // FACE FRAMES
   this.D2_stroke1 = 0.1;
   this.D2_stroke2 = 0.05;
@@ -333,14 +295,10 @@ else if (this.distanceBetween < -1){
 
   this.D3_MouthStroke1 =0.2;
 
-
-
   }
 
   // facing between forward and side
 else{
-    this.tester_stroke ="red";
-
     // FACE FRAMES
     this.D2_stroke1 = 0.1;
     this.D2_stroke2 = 0.05;
@@ -382,110 +340,15 @@ else{
  
     }
 
-    this.right_earpts = 10;
-
   
-    // push();
-    // strokeWeight(0.05);
-    // stroke(this.tester_stroke);
-
-    //  fill(255,255,255);
-    //  ellipse (this.right_faceedgeX, this.right_faceedgeY, 0.2, 0.2)
-
-    //  fill(255, 255, 255,255);
-    //  ellipse (this.left_faceedgeX, this.left_faceedgeY, 0.2, 0.2)
-
-
-    // // RIGHT EAR
-    // beginShape();
-    // strokeWeight(0.05);
-    // stroke(this.dimension_maincolour);
-    // noFill();
-    // vertex(this.right_faceedgeX, this.right_faceedgeY);
-    // bezierVertex(this.right_faceedgeX - 0.2, this.right_faceedgeY+0.3, this.right_faceedgeX -0.3, this.right_faceedgeY+0.4, this.right_faceedgeX-0.2, this.right_faceedgeY+0.6);
-
-    // endShape();
-
-
-    // /// LEFT EAR
-    // beginShape();
-    // strokeWeight(0.05);
-    // stroke(255, 255, 255);
-    // noFill();
-    // vertex(this.left_faceedgeX, this.left_faceedgeY); // Starting vertex
-    // bezierVertex(
-    //   this.left_faceedgeX - 0.2, this.left_faceedgeY + 0.3, // Control point 1
-    //   this.left_faceedgeX + 0.1, this.left_faceedgeY + 0.4, // Control point 2
-    //   this.left_faceedgeX - 0.2, this.left_faceedgeY + 0.6, // Ending vertex
-      
-    // );
-
-    // endShape();
-
-
-// /// RIGHT EAR
-//     noFill();
-//     let centerX = this.right_faceedgeX-3; // X-coordinate of the center point
-//     let centerY = this.right_faceedgeY; // Y-coordinate of the center point
-//     let radius = 2; // Radius of the arc
-//     let startAngle =-2000; // Start angle in degrees
-//     let stopAngle = -5000; // Stop angle in degrees
-
-//     push();
-//     scale(0.5);
-//     stroke(this.dimension3_maincolour);
-//     arc(centerX, centerY, radius, radius, radians(startAngle), radians(stopAngle));
-//     pop();
-
-//     push();
-//     stroke(this.dimension_maincolour);
-//     scale(0.51);
-//     arc(centerX-0.3, centerY, radius, radius, radians(startAngle), radians(stopAngle));
-//     pop();
-
-//     push();
-//     stroke(this.orginal_framecolour);
-//     scale(0.52);
-//     arc(centerX-0.6, centerY, radius, radius, radians(startAngle), radians(stopAngle));
-//     pop();
-    
-// // RIGHT EAR
-//     noFill();
-//     let centerXL = this.left_faceedgeX+1; // X-coordinate of the center point
-//     let centerYL = this.left_faceedgeY; // Y-coordinate of the center point
-//     let startAngleL =8000; // Start angle in degrees
-//     let stopAngleL = -9000; // Stop angle in degrees
-
-//     arc(centerXL, centerYL, radius, radius, radians(startAngleL), radians(stopAngleL));
-
-
-//     pop();
-
-//     beginShape();
-//        scale(0.2);
-//     noFill();
-//     stroke(255, 255, 255);
-//     strokeWeight(0.01)
-
-//     pop();
-
-  
-  
-    scale(0.5);
-  
-  
-    scale(0.6);
-    angleMode(DEGREES);
-
   
   //*********************************************************1st Dimension ************************************************ */
   
+  scale(0.5);
+  scale(0.6);
+  angleMode(DEGREES);
   
-
-  //// THIRD DIMENSION SHADOW ////
-  
-  
-  //////////////////// FACE DETAIL ////////////////////
+  //////////////////// FACE DETAIL //////////////////// FIRST DIMENSION
     push();
     strokeWeight(0.1);
 
@@ -583,7 +446,7 @@ else{
      endShape(CLOSE);
      pop();
       
-    ////////////// RIGHT EYE ///////////////////
+    ////////////// RIGHT EYE /////////////////// FIRST DIMENSION
 
     push();
     noFill();
@@ -628,9 +491,6 @@ else{
       curveVertex(this.averageRightEye[0]+1.5, this.averageRightEye[1]-3);
     }
     endShape(CLOSE);
-
-
-
     pop();
   
 
@@ -682,32 +542,32 @@ else{
     }
     endShape(CLOSE);
 
-    ////////// NOSE ////////////
+    ////////////////////// NOSE //////////// FIRST DIMENSION
 
-// main nose shape
-push();
-stroke(this.orginal_framecolour);
-noFill();
+    // main nose shape
+    push();
+    stroke(this.orginal_framecolour);
+    noFill();
 
-this.pointsnose = 15;
+    this.pointsnose = 15;
 
-beginShape();
-//
-strokeWeight (0.1);
-rotate(this.rotateNose);
-for (let i = 0; i <this.pointsnose; i++) {
-  let n = map(noise(i), this.lower_val+0.5, this.higher_val, -2, this.nose_value);
-  let r = 3 + n;
-  this.averageNose[0] = r * cos(i * (360 / this.pointsnose));
-  this.averageNose[1] = r * sin(i * (360 / this.pointsnose));
-  curveVertex(this.averageNose[0],this.averageNose[1]);
-}
-endShape(CLOSE);
-pop();
+    beginShape();
+    //
+    strokeWeight (0.1);
+    rotate(this.rotateNose);
+    for (let i = 0; i <this.pointsnose; i++) {
+      let n = map(noise(i), this.lower_val+0.5, this.higher_val, -2, this.nose_value);
+      let r = 3 + n;
+      this.averageNose[0] = r * cos(i * (360 / this.pointsnose));
+      this.averageNose[1] = r * sin(i * (360 / this.pointsnose));
+      curveVertex(this.averageNose[0],this.averageNose[1]);
+    }
+    endShape(CLOSE);
+    pop();
   
   //*********************************************** 2nd Dimension ************************************************ */
 
-    ///////////////////////// SECOND DIMENSION HEAD OUTLINE //////////////////////
+    ///////////////////////// HEAD OUTLINE ////////////////////// SECOND DIMENSION
     // Thickest head outline
 
     push();
@@ -806,8 +666,6 @@ pop();
     endShape(CLOSE);
 
 
-
-
     pop();
     //////////////////// LEFT EYE /////////////////////// SECOND DIMENSION
     push();
@@ -881,8 +739,9 @@ pop();
 
     //*********************************************** 3rd Dimension ************************************************ */
 
-    // 2nd Thickest head outline
-
+ 
+    ////////////////////// FACE FRAME AND DETAIL ///////////////// THIRD DIMENSION
+   // 2nd Thickest head outline
     push();
     beginShape();
        
@@ -1002,477 +861,289 @@ pop();
 
     
 
-  ////////////////////////////////// NOSE ///////////////// THIRD DIMENSION
-// main nose shape
-push();
-stroke(this.dimension3_maincolour);
-noFill();
+   ///////////////////////////// NOSE ///////////////// THIRD DIMENSION
+    // main nose shape
+    push();
+    stroke(this.dimension3_maincolour);
+    noFill();
 
-this.pointsnose = 12;
+    this.pointsnose = 12;
 
-beginShape();
-//
-//rotate(this.rotateNose);
-strokeWeight (this.D3_NoseStroke1);
-for (let i = 0; i <this.pointsnose; i++) {
-  let n = map(noise(i), this.lower_val+0.5, this.higher_val, -2, this.nose_value);
-  let r = 2.6 + n;
-  this.averageNose[0] = r * cos(i * (360 / this.pointsnose));
-  this.averageNose[1] = r * sin(i * (360 / this.pointsnose));
-  curveVertex(this.averageNose[0] +this.nose3rd_dimen,this.averageNose[1]);
-}
-endShape(CLOSE);
-pop();
+    beginShape();
+    //
+    //rotate(this.rotateNose);
+    strokeWeight (this.D3_NoseStroke1);
+    for (let i = 0; i <this.pointsnose; i++) {
+      let n = map(noise(i), this.lower_val+0.5, this.higher_val, -2, this.nose_value);
+      let r = 2.6 + n;
+      this.averageNose[0] = r * cos(i * (360 / this.pointsnose));
+      this.averageNose[1] = r * sin(i * (360 / this.pointsnose));
+      curveVertex(this.averageNose[0] +this.nose3rd_dimen,this.averageNose[1]);
+    }
+    endShape(CLOSE);
+    pop();
 
   ///////////////// MOUTH MOVING ///////////// FIRST DIMENSION
 
-if (this.mouthh_value >1 && this.mouthh_value< 3){
-  push();
-  noFill();
-  stroke(this.orginal_framecolour);
+  if (this.mouthh_value >1 && this.mouthh_value< 3){
+    push();
+    noFill();
+    stroke(this.orginal_framecolour);
 
-  this.points5 = 16;
+    this.points5 = 16;
 
-  // main shape outline
-  beginShape();
- // noFill();
-  strokeWeight(0.2);
-  for (let i = 0; i < this.points5; i++) {
-    let n = map(noise(i), this.lower_val, this.higher_val-1, -2, this.mouthh_value);
-    let r = 3 + n;
-    this.averageMouth[0] = r * cos(i * (340 / this.points5));
-    this.averageMouth[1] = r * sin(i * (260 / this.points5));
-    curveVertex(this.averageMouth[0], this.averageMouth[1]+3);
+    // main shape outline
+    beginShape();
+  // noFill();
+    strokeWeight(0.2);
+    for (let i = 0; i < this.points5; i++) {
+      let n = map(noise(i), this.lower_val, this.higher_val-1, -2, this.mouthh_value);
+      let r = 3 + n;
+      this.averageMouth[0] = r * cos(i * (340 / this.points5));
+      this.averageMouth[1] = r * sin(i * (260 / this.points5));
+      curveVertex(this.averageMouth[0], this.averageMouth[1]+3);
+    }
+    endShape(CLOSE);
+
+    // thinner shape outline
+    beginShape();
+  // noFill();
+    strokeWeight(0.1);
+    for (let i = 0; i < this.points5; i++) {
+      let n = map(noise(i), this.lower_val, this.higher_val-1, -2, this.mouthh_value);
+      let r = 2.5 + n;
+      this.averageMouth[0] = r * cos(i * (340 / this.points5));
+      this.averageMouth[1] = r * sin(i * (260 / this.points5));
+      curveVertex(this.averageMouth[0], this.averageMouth[1]+3);
+    }
+    endShape(CLOSE);
+
+
+    pop();
   }
-  endShape(CLOSE);
 
-   // thinner shape outline
-  beginShape();
- // noFill();
-  strokeWeight(0.1);
-  for (let i = 0; i < this.points5; i++) {
-    let n = map(noise(i), this.lower_val, this.higher_val-1, -2, this.mouthh_value);
-    let r = 2.5 + n;
-    this.averageMouth[0] = r * cos(i * (340 / this.points5));
-    this.averageMouth[1] = r * sin(i * (260 / this.points5));
-    curveVertex(this.averageMouth[0], this.averageMouth[1]+3);
-  }
-  endShape(CLOSE);
-
-
-  pop();
-}
-
-else if(this.mouthh_value < 1){
-
-  push();
-  noFill();
-  strokeWeight(0.1);
-  stroke(this.orginal_framecolour);
-
-  this.points5 = 16;
-
-  // main shape outline
-  beginShape();
- // noFill();
-  strokeWeight(0.2);
-  for (let i = 0; i < this.points5; i++) {
-    let n = map(noise(i), this.lower_val, this.higher_val-1, -2, this.mouthh_value);
-    let r = 3 + n;
-    this.averageMouth[0] = r * cos(i * (360 / this.points5));
-    this.averageMouth[1] = r * sin(i * (180 / this.points5));
-    curveVertex(this.averageMouth[0], this.averageMouth[1]+3);
-  }
-  endShape(CLOSE);
-
-   // thinner shape outline
-  beginShape();
- // noFill();
-  strokeWeight(0.1);
-  for (let i = 0; i < this.points5; i++) {
-    let n = map(noise(i), this.lower_val, this.higher_val-1, -2, this.mouthh_value);
-    let r = 2.5 + n;
-    this.averageMouth[0] = r * cos(i * (360 / this.points5));
-    this.averageMouth[1] = r * sin(i * (180 / this.points5));
-    curveVertex(this.averageMouth[0], this.averageMouth[1]+3);
-  }
-  endShape(CLOSE);
-
-
-  pop();
-
-}
-else{
+  else if(this.mouthh_value < 1){
 
     push();
     noFill();
-    strokeWeight(0.3);
+    strokeWeight(0.1);
     stroke(this.orginal_framecolour);
-  
+
     this.points5 = 16;
-  
+
     // main shape outline
     beginShape();
-   // noFill();
+  // noFill();
     strokeWeight(0.2);
     for (let i = 0; i < this.points5; i++) {
       let n = map(noise(i), this.lower_val, this.higher_val-1, -2, this.mouthh_value);
       let r = 3 + n;
       this.averageMouth[0] = r * cos(i * (360 / this.points5));
-      this.averageMouth[1] = r * sin(i * (360 / this.points5));
+      this.averageMouth[1] = r * sin(i * (180 / this.points5));
       curveVertex(this.averageMouth[0], this.averageMouth[1]+3);
     }
     endShape(CLOSE);
-  
-     // thinner shape outline
+
+    // thinner shape outline
     beginShape();
-   // noFill();
+  // noFill();
     strokeWeight(0.1);
     for (let i = 0; i < this.points5; i++) {
       let n = map(noise(i), this.lower_val, this.higher_val-1, -2, this.mouthh_value);
       let r = 2.5 + n;
       this.averageMouth[0] = r * cos(i * (360 / this.points5));
-      this.averageMouth[1] = r * sin(i * (360 / this.points5));
+      this.averageMouth[1] = r * sin(i * (180 / this.points5));
       curveVertex(this.averageMouth[0], this.averageMouth[1]+3);
     }
     endShape(CLOSE);
+
+
     pop();
+
   }
+  else{
 
-    ///////////////// MOUTH MOVING ///////////// SECOND DIMENSION
+      push();
+      noFill();
+      strokeWeight(0.3);
+      stroke(this.orginal_framecolour);
+    
+      this.points5 = 16;
+    
+      // main shape outline
+      beginShape();
+    // noFill();
+      strokeWeight(0.2);
+      for (let i = 0; i < this.points5; i++) {
+        let n = map(noise(i), this.lower_val, this.higher_val-1, -2, this.mouthh_value);
+        let r = 3 + n;
+        this.averageMouth[0] = r * cos(i * (360 / this.points5));
+        this.averageMouth[1] = r * sin(i * (360 / this.points5));
+        curveVertex(this.averageMouth[0], this.averageMouth[1]+3);
+      }
+      endShape(CLOSE);
+    
+      // thinner shape outline
+      beginShape();
+    // noFill();
+      strokeWeight(0.1);
+      for (let i = 0; i < this.points5; i++) {
+        let n = map(noise(i), this.lower_val, this.higher_val-1, -2, this.mouthh_value);
+        let r = 2.5 + n;
+        this.averageMouth[0] = r * cos(i * (360 / this.points5));
+        this.averageMouth[1] = r * sin(i * (360 / this.points5));
+        curveVertex(this.averageMouth[0], this.averageMouth[1]+3);
+      }
+      endShape(CLOSE);
+      pop();
+    }
 
-if (this.mouthh_value >1 && this.mouthh_value< 3){
-  push();
-  noFill();
-  stroke(this.dimension_maincolour);
+  ///////////////// MOUTH MOVING ///////////// SECOND DIMENSION
 
-  this.points5 = 16;
-
-  // main shape outline
-  beginShape();
- // noFill();
-  strokeWeight(this.D2_MouthStroke1);
-  for (let i = 0; i < this.points5; i++) {
-    let n = map(noise(i), this.lower_val, this.higher_val-1, -2, this.mouthh_value);
-    let r = 2.9 + n;
-    this.averageMouth[0] = r * cos(i * (340 / this.points5));
-    this.averageMouth[1] = r * sin(i * (260 / this.points5));
-    curveVertex(this.averageMouth[0]+this.mouth2nd_dimen, this.averageMouth[1]+3);
-  }
-  endShape(CLOSE);
-  pop();
-}
-
-else if(this.mouthh_value < 1){
-
-  push();
-  noFill();
-  stroke(this.dimension_maincolour);
-
-  this.points5 = 16;
-
-  // main shape outline
-  beginShape();
- // noFill();
-  strokeWeight(this.D2_MouthStroke1);
-  for (let i = 0; i < this.points5; i++) {
-    let n = map(noise(i), this.lower_val, this.higher_val-1, -2, this.mouthh_value);
-    let r = 2.9 + n;
-    this.averageMouth[0] = r * cos(i * (360 / this.points5));
-    this.averageMouth[1] = r * sin(i * (180 / this.points5));
-    curveVertex(this.averageMouth[0]+this.mouth2nd_dimen, this.averageMouth[1]+3);
-  }
-  endShape(CLOSE);
-
-  pop();
-
-}
-else{
-
+  if (this.mouthh_value >1 && this.mouthh_value< 3){
     push();
     noFill();
     stroke(this.dimension_maincolour);
-  
+
     this.points5 = 16;
-  
+
     // main shape outline
     beginShape();
-   // noFill();
+  // noFill();
     strokeWeight(this.D2_MouthStroke1);
     for (let i = 0; i < this.points5; i++) {
       let n = map(noise(i), this.lower_val, this.higher_val-1, -2, this.mouthh_value);
       let r = 2.9 + n;
-      this.averageMouth[0] = r * cos(i * (360 / this.points5));
-      this.averageMouth[1] = r * sin(i * (360 / this.points5));
+      this.averageMouth[0] = r * cos(i * (340 / this.points5));
+      this.averageMouth[1] = r * sin(i * (260 / this.points5));
       curveVertex(this.averageMouth[0]+this.mouth2nd_dimen, this.averageMouth[1]+3);
     }
     endShape(CLOSE);
     pop();
   }
 
-    ///////////////// MOUTH MOVING ///////////// THIRD DIMENSION
-
-if (this.mouthh_value >1 && this.mouthh_value< 3){
-  push();
-  noFill();
-  stroke(this.dimension3_maincolour);
-
-  this.points5 = 16;
-
-  // main shape outline
-  beginShape();
- // noFill();
-  strokeWeight(this.D3_MouthStroke1);
-  for (let i = 0; i < this.points5; i++) {
-    let n = map(noise(i), this.lower_val, this.higher_val-1, -2, this.mouthh_value);
-    let r = 2.7 + n;
-    this.averageMouth[0] = r * cos(i * (340 / this.points5));
-    this.averageMouth[1] = r * sin(i * (260 / this.points5));
-    curveVertex(this.averageMouth[0]+this.mouth3rd_dimen, this.averageMouth[1]+3);
-  }
-  endShape(CLOSE);
-
-
-  pop();
-}
-
-else if(this.mouthh_value < 1){
-
-  push();
-  noFill();
-  stroke(this.dimension3_maincolour);
-
-  this.points5 = 16;
-
-  // main shape outline
-  beginShape();
- // noFill();
-  strokeWeight(this.D3_MouthStroke1);
-  for (let i = 0; i < this.points5; i++) {
-    let n = map(noise(i), this.lower_val, this.higher_val-1, -2, this.mouthh_value);
-    let r = 2.7 + n;
-    this.averageMouth[0] = r * cos(i * (360 / this.points5));
-    this.averageMouth[1] = r * sin(i * (180 / this.points5));
-    curveVertex(this.averageMouth[0]+this.mouth3rd_dimen, this.averageMouth[1]+3);
-  }
-  endShape(CLOSE);
-
-}
-else{
+  else if(this.mouthh_value < 1){
 
     push();
     noFill();
-    strokeWeight(0.3);
-    stroke(this.dimension3_maincolour);
-  
+    stroke(this.dimension_maincolour);
+
     this.points5 = 16;
-  
+
     // main shape outline
     beginShape();
-   // noFill();
+  // noFill();
+    strokeWeight(this.D2_MouthStroke1);
+    for (let i = 0; i < this.points5; i++) {
+      let n = map(noise(i), this.lower_val, this.higher_val-1, -2, this.mouthh_value);
+      let r = 2.9 + n;
+      this.averageMouth[0] = r * cos(i * (360 / this.points5));
+      this.averageMouth[1] = r * sin(i * (180 / this.points5));
+      curveVertex(this.averageMouth[0]+this.mouth2nd_dimen, this.averageMouth[1]+3);
+    }
+    endShape(CLOSE);
+
+    pop();
+
+  }
+  else{
+
+      push();
+      noFill();
+      stroke(this.dimension_maincolour);
+    
+      this.points5 = 16;
+    
+      // main shape outline
+      beginShape();
+    // noFill();
+      strokeWeight(this.D2_MouthStroke1);
+      for (let i = 0; i < this.points5; i++) {
+        let n = map(noise(i), this.lower_val, this.higher_val-1, -2, this.mouthh_value);
+        let r = 2.9 + n;
+        this.averageMouth[0] = r * cos(i * (360 / this.points5));
+        this.averageMouth[1] = r * sin(i * (360 / this.points5));
+        curveVertex(this.averageMouth[0]+this.mouth2nd_dimen, this.averageMouth[1]+3);
+      }
+      endShape(CLOSE);
+      pop();
+    }
+
+  ///////////////// MOUTH MOVING ///////////// THIRD DIMENSION
+
+  if (this.mouthh_value >1 && this.mouthh_value< 3){
+    push();
+    noFill();
+    stroke(this.dimension3_maincolour);
+
+    this.points5 = 16;
+
+    // main shape outline
+    beginShape();
+  // noFill();
+    strokeWeight(this.D3_MouthStroke1);
+    for (let i = 0; i < this.points5; i++) {
+      let n = map(noise(i), this.lower_val, this.higher_val-1, -2, this.mouthh_value);
+      let r = 2.7 + n;
+      this.averageMouth[0] = r * cos(i * (340 / this.points5));
+      this.averageMouth[1] = r * sin(i * (260 / this.points5));
+      curveVertex(this.averageMouth[0]+this.mouth3rd_dimen, this.averageMouth[1]+3);
+    }
+    endShape(CLOSE);
+
+
+    pop();
+  }
+
+  else if(this.mouthh_value < 1){
+
+    push();
+    noFill();
+    stroke(this.dimension3_maincolour);
+
+    this.points5 = 16;
+
+    // main shape outline
+    beginShape();
+  // noFill();
     strokeWeight(this.D3_MouthStroke1);
     for (let i = 0; i < this.points5; i++) {
       let n = map(noise(i), this.lower_val, this.higher_val-1, -2, this.mouthh_value);
       let r = 2.7 + n;
       this.averageMouth[0] = r * cos(i * (360 / this.points5));
-      this.averageMouth[1] = r * sin(i * (360 / this.points5));
+      this.averageMouth[1] = r * sin(i * (180 / this.points5));
       curveVertex(this.averageMouth[0]+this.mouth3rd_dimen, this.averageMouth[1]+3);
     }
     endShape(CLOSE);
+
+  }
+  else{
+
+      push();
+      noFill();
+      strokeWeight(0.3);
+      stroke(this.dimension3_maincolour);
+    
+      this.points5 = 16;
+    
+      // main shape outline
+      beginShape();
+    // noFill();
+      strokeWeight(this.D3_MouthStroke1);
+      for (let i = 0; i < this.points5; i++) {
+        let n = map(noise(i), this.lower_val, this.higher_val-1, -2, this.mouthh_value);
+        let r = 2.7 + n;
+        this.averageMouth[0] = r * cos(i * (360 / this.points5));
+        this.averageMouth[1] = r * sin(i * (360 / this.points5));
+        curveVertex(this.averageMouth[0]+this.mouth3rd_dimen, this.averageMouth[1]+3);
+      }
+      endShape(CLOSE);
+    }
+
   }
 
 
-
-//   //****************** */
-//   ///////////////// MOUTH MOVING 2nd Dimension /////////////
-
-// if (this.mouthh_value >1 && this.mouthh_value< 3){
-//   push();
-//   noFill();
-//   strokeWeight(0.1);
-//   stroke(this.dimension_maincolour);
-
-//   this.points5 = 16;
-
-//   // main shape outline
-//   beginShape();
-//  // noFill();
-//   strokeWeight(0.2);
-//   for (let i = 0; i < this.points5; i++) {
-//     let n = map(noise(i), this.lower_val, this.higher_val-1, -2, this.mouthh_value);
-//     let r = 3 + n;
-//     this.averageMouth[0] = r * cos(i * (340 / this.points5));
-//     this.averageMouth[1] = r * sin(i * (260 / this.points5));
-//     curveVertex(this.averageMouth[0], this.averageMouth[1]+3);
-//   }
-//   endShape(CLOSE);
-
-//    // thinner shape outline
-//   beginShape();
-//  // noFill();
-//   strokeWeight(0.1);
-//   for (let i = 0; i < this.points5; i++) {
-//     let n = map(noise(i), this.lower_val, this.higher_val-1, -2, this.mouthh_value);
-//     let r = 2.5 + n;
-//     this.averageMouth[0] = r * cos(i * (340 / this.points5));
-//     this.averageMouth[1] = r * sin(i * (260 / this.points5));
-//     curveVertex(this.averageMouth[0], this.averageMouth[1]+3);
-//   }
-//   endShape(CLOSE);
-
-
-//   pop();
-// }
-
-// else if(this.mouthh_value < 1){
-
-//   push();
-//   noFill();
-//   strokeWeight(0.1);
-//   stroke(this.orginal_framecolour);
-
-//   this.points5 = 16;
-
-//   // main shape outline
-//   beginShape();
-//  // noFill();
-//   strokeWeight(0.2);
-//   for (let i = 0; i < this.points5; i++) {
-//     let n = map(noise(i), this.lower_val, this.higher_val-1, -2, this.mouthh_value);
-//     let r = 3 + n;
-//     this.averageMouth[0] = r * cos(i * (360 / this.points5));
-//     this.averageMouth[1] = r * sin(i * (180 / this.points5));
-//     curveVertex(this.averageMouth[0], this.averageMouth[1]+3);
-//   }
-//   endShape(CLOSE);
-
-//    // thinner shape outline
-//   beginShape();
-//  // noFill();
-//   strokeWeight(0.1);
-//   for (let i = 0; i < this.points5; i++) {
-//     let n = map(noise(i), this.lower_val, this.higher_val-1, -2, this.mouthh_value);
-//     let r = 2.5 + n;
-//     this.averageMouth[0] = r * cos(i * (360 / this.points5));
-//     this.averageMouth[1] = r * sin(i * (180 / this.points5));
-//     curveVertex(this.averageMouth[0], this.averageMouth[1]+3);
-//   }
-//   endShape(CLOSE);
-
-
-//   pop();
-
-// }
-// else{
-
-//     push();
-//     noFill();
-//     strokeWeight(0.3);
-//     stroke(this.orginal_framecolour);
-  
-//     this.points5 = 16;
-  
-//     // main shape outline
-//     beginShape();
-//    // noFill();
-//     strokeWeight(0.2);
-//     for (let i = 0; i < this.points5; i++) {
-//       let n = map(noise(i), this.lower_val, this.higher_val-1, -2, this.mouthh_value);
-//       let r = 3 + n;
-//       this.averageMouth[0] = r * cos(i * (360 / this.points5));
-//       this.averageMouth[1] = r * sin(i * (360 / this.points5));
-//       curveVertex(this.averageMouth[0], this.averageMouth[1]+3);
-//     }
-//     endShape(CLOSE);
-  
-//      // thinner shape outline
-//     beginShape();
-//    // noFill();
-//     strokeWeight(0.1);
-//     for (let i = 0; i < this.points5; i++) {
-//       let n = map(noise(i), this.lower_val, this.higher_val-1, -2, this.mouthh_value);
-//       let r = 2.5 + n;
-//       this.averageMouth[0] = r * cos(i * (360 / this.points5));
-//       this.averageMouth[1] = r * sin(i * (360 / this.points5));
-//       curveVertex(this.averageMouth[0], this.averageMouth[1]+3);
-//     }
-//     endShape(CLOSE);
-//     pop();
-//}
-
-    
-
- 
-
-  
-    
-  //   console.log()
-  //   // head
-  //   ellipseMode(CENTER);
-  //   stroke(stroke_color);
-  //   fill(this.mainColour);
-  //   ellipse(segment_average(positions.chin)[0], 0, 3, 4);
-  //   noStroke();
-
-
-  //   // mouth
-  //   fill(this.detailColour);
-  //   ellipse(segment_average(positions.bottom_lip)[0], segment_average(positions.bottom_lip)[1], 1.36, 0.25 * this.mouth_size);
-
-  //   // eyebrows
-  //   fill( this.eyebrowColour);
-  //   stroke( this.eyebrowColour);
-  //   strokeWeight(0.08);
-  //   this.draw_segment(positions.left_eyebrow);
-  //   this.draw_segment(positions.right_eyebrow);
-
-  //   // draw the chin segment using points
-  //   fill(this.chinColour);
-  //   stroke(this.chinColour);
-  //   this.draw_segment(positions.chin);
-
-  //   fill(100, 0, 100);
-  //   stroke(100, 0, 100);
-  //   this.draw_segment(positions.nose_bridge);
-  //   this.draw_segment(positions.nose_tip);
-
-  //   strokeWeight(0.03);
-
-  //   fill(this.lipColour);
-  //   stroke(this.lipColour);
-  //   this.draw_segment(positions.top_lip);
-  //   this.draw_segment(positions.bottom_lip);
-
-  //   let left_eye_pos = segment_average(positions.left_eye);
-  //   let right_eye_pos = segment_average(positions.right_eye);
-
-  //   // eyes
-  //   noStroke();
-  //   let curEyeShift = 0.04 * this.eye_shift;
-  //   if(this.num_eyes == 2) {
-  //     fill(this.detailColour);
-  //     ellipse(left_eye_pos[0], left_eye_pos[1], 0.5, 0.33);
-  //     ellipse(right_eye_pos[0], right_eye_pos[1], 0.5, 0.33);
-
-  //     // fill(this.mainColour);
-  //     // ellipse(left_eye_pos[0] + curEyeShift, left_eye_pos[1], 0.18);
-  //     // ellipse(right_eye_pos[0] + curEyeShift, right_eye_pos[1], 0.18);
-  //   }
-  //   else {
-  //     let eyePosX = (left_eye_pos[0] + right_eye_pos[0]) / 2;
-  //     let eyePosY = (left_eye_pos[1] + right_eye_pos[1]) / 2;
-
-  //     fill(this.detailColour);
-  //     ellipse(eyePosX, eyePosY, 0.45, 0.27);
-
-  //     fill(this.mainColour);
-  //     ellipse(eyePosX - 0.1 + curEyeShift, eyePosY, 0.18);
-  //   }
-  //  // fill(0)
-  //  //ellipse(0,0, 0.5,0.5) center point
-  //  //rect(-2,-2,4.5,4) sizing debug 
-  }
-
+  // ********************************************************* SLIDERS **********************************
   // example of a function *inside* the face object.
   // this draws a segment, and do_loop will connect the ends if true
   this.draw_segment = function(segment, do_loop) {
